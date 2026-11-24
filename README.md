@@ -6,7 +6,7 @@ MEDNOVA AI **bemorlar**, **şifokorlar** va **administratorlarni** bitta platfor
 
 > ⚠️ Bu ta’limiy loyiha: taşxis qöymaydi va şoşilinç yordam körsatmaydi. Barça odamlar va tibbiy ma’lumotlar **xayoliy**. Favqulodda holatda — **103**.
 
-**Jonli demo:** Vercel’da (havola quyida, deploy’dan keyin) · **Kod:** https://github.com/saidakbarjo/mednova-ai
+**Jonli demo:** https://mednova-ai-seven.vercel.app · **Kod:** https://github.com/saidakbarjo/mednova-ai
 
 [![CI](https://github.com/saidakbarjo/mednova-ai/actions/workflows/ci.yml/badge.svg)](https://github.com/saidakbarjo/mednova-ai/actions)
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/saidakbarjo/mednova-ai&env=JWT_SECRET)

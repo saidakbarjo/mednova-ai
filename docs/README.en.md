@@ -1,5 +1,7 @@
 # MEDNOVA AI — Intelligent Healthcare Platform
 
+**Live demo:** https://mednova-ai-seven.vercel.app
+
 > University project by **Saidakbar & Zukhra**
 
 MEDNOVA AI connects **patients**, **doctors** and **administrators** on one platform. Patients can find verified specialists, book appointments in real time, keep their medical records together and use an educational AI assistant. Doctors manage their agenda, patients and schedule. Administrators verify doctors, manage users and watch platform analytics.
@@ -48,7 +50,7 @@ JWT_SECRET=$(openssl rand -base64 48)
 ANTHROPIC_API_KEY=            # optional; without it the assistant runs in demo mode
 ```
 
-5. Run `npm run build && npm start`, or deploy to Vercel. **On Vercel you must set `DATABASE_URL`**, because the filesystem is read-only and PGlite can't store its files there.
+5. Run `npm run build && npm start`, or deploy to Vercel. Without `DATABASE_URL` it runs in demo mode on Vercel (PGlite in `/tmp`, re-seeded on cold start); connect Supabase for persistent data.
 
 > In production the session cookie is marked `Secure`, so the site must be served over **HTTPS** (`localhost` is fine). To test `npm start` over plain HTTP on another machine, set `MEDNOVA_INSECURE_COOKIES=1`. Never set it in a real deployment.
 
