@@ -6,11 +6,11 @@ export const dynamic = "force-dynamic";
 
 /** GET /api/doctors/:id/slots?date=YYYY-MM-DD → available start times */
 export const GET = handler(async (req: Request, { params }: { params: { id: string } }) => {
-  if (!isUuid(params.id)) throw Errors.notFound("Doctor");
+  if (!isUuid(params.id)) throw Errors.notFound("e.doctorNotFound");
   const date = new URL(req.url).searchParams.get("date") ?? "";
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) throw Errors.badRequest("Provide date as YYYY-MM-DD.");
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) throw Errors.badRequest("e.dateFormat");
   const doctor = await one<{ is_verified: boolean }>("SELECT is_verified FROM doctors WHERE id=$1", [params.id]);
-  if (!doctor || !doctor.is_verified) throw Errors.notFound("Doctor");
+  if (!doctor || !doctor.is_verified) throw Errors.notFound("e.doctorNotFound");
 
   const dow = new Date(`${date}T12:00:00`).getDay();
   const sched = await one<{ start_time: string; end_time: string; slot_minutes: number }>(

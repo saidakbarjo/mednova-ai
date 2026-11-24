@@ -9,11 +9,11 @@ export const dynamic = "force-dynamic";
 type Ctx = { params: { id: string } };
 
 export const GET = handler(async (_req: Request, { params }: Ctx) => {
-  if (!isUuid(params.id)) throw Errors.notFound("Doctor");
+  if (!isUuid(params.id)) throw Errors.notFound("e.doctorNotFound");
   const user = await getCurrentUser();
   const doctor = await one<Record<string, unknown>>(`${DOCTOR_SELECT} WHERE d.id = $1`, [params.id]);
   const canSeeUnverified = user && (user.role === "admin" || user.doctor_id === params.id);
-  if (!doctor || (!doctor.is_verified && !canSeeUnverified)) throw Errors.notFound("Doctor");
+  if (!doctor || (!doctor.is_verified && !canSeeUnverified)) throw Errors.notFound("e.doctorNotFound");
   const schedule = await query(SCHEDULE_SELECT, [params.id]);
   const [stats] = await query<{ completed: number; patients: number }>(
     "SELECT count(*) FILTER (WHERE status='completed')::int AS completed, count(DISTINCT patient_id)::int AS patients FROM appointments WHERE doctor_id=$1",
@@ -26,13 +26,13 @@ export const GET = handler(async (_req: Request, { params }: Ctx) => {
 /** PUT /api/doctors/:id — the doctor edits their own profile/schedule; admin can edit any + verify */
 export const PUT = handler(async (req: Request, { params }: Ctx) => {
   const user = await requireUser("doctor", "admin");
-  if (!isUuid(params.id)) throw Errors.notFound("Doctor");
-  if (user.role === "doctor" && user.doctor_id !== params.id) throw Errors.forbidden("You can only edit your own profile.");
+  if (!isUuid(params.id)) throw Errors.notFound("e.doctorNotFound");
+  if (user.role === "doctor" && user.doctor_id !== params.id) throw Errors.forbidden("e.ownProfileOnly");
   const b = await parseBody(req, doctorUpdateSchema);
-  if (b.is_verified !== undefined && user.role !== "admin") throw Errors.forbidden("Only administrators can verify doctors.");
+  if (b.is_verified !== undefined && user.role !== "admin") throw Errors.forbidden("e.adminVerifyOnly");
 
   const existing = await one<{ user_id: string; is_verified: boolean }>("SELECT user_id, is_verified FROM doctors WHERE id=$1", [params.id]);
-  if (!existing) throw Errors.notFound("Doctor");
+  if (!existing) throw Errors.notFound("e.doctorNotFound");
 
   await transaction(async (tx) => {
     const fields: [string, unknown][] = [];
@@ -58,12 +58,7 @@ export const PUT = handler(async (req: Request, { params }: Ctx) => {
       }
     }
     if (b.is_verified !== undefined && b.is_verified !== existing.is_verified) {
-      await notify(
-        existing.user_id, "verification",
-        b.is_verified ? "Your profile is verified" : "Verification revoked",
-        b.is_verified ? "Patients can now discover and book appointments with you." : "Your profile is hidden from patients until re-verified.",
-        "/dashboard/doctor", tx,
-      );
+      await notify(existing.user_id, "verification", b.is_verified ? "verified" : "unverified", {}, "/dashboard/doctor", tx);
     }
   });
   const doctor = await one(`${DOCTOR_SELECT} WHERE d.id = $1`, [params.id]);

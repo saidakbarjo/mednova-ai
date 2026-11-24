@@ -18,22 +18,24 @@ export const GET = handler(async () => {
               (SELECT count(*)::int FROM appointments) AS appointments,
               (SELECT count(*)::int FROM appointments WHERE scheduled_at >= now() AND status IN ('pending','confirmed')) AS upcoming_appointments,
               (SELECT count(*)::int FROM messages WHERE role='user') AS ai_questions,
-              (SELECT count(*)::int FROM users WHERE NOT is_active) AS inactive_users`,
+              (SELECT count(*)::int FROM users WHERE NOT is_active) AS inactive_users,
+              (SELECT count(*)::int FROM reviews) AS reviews,
+              (SELECT round(avg(rating)::numeric, 2)::float FROM reviews) AS avg_review`,
     );
     const byStatus = await query("SELECT status, count(*)::int AS count FROM appointments GROUP BY status ORDER BY status");
     const monthly = await query(
-      `SELECT to_char(date_trunc('month', scheduled_at), 'Mon YY') AS month, date_trunc('month', scheduled_at) AS m,
+      `SELECT date_trunc('month', scheduled_at) AS m,
               count(*)::int AS total,
               count(*) FILTER (WHERE status='completed')::int AS completed,
               count(*) FILTER (WHERE status='cancelled')::int AS cancelled
          FROM appointments WHERE scheduled_at >= date_trunc('month', now()) - interval '5 months'
-        GROUP BY 1,2 ORDER BY 2`,
+        GROUP BY 1 ORDER BY 1`,
     );
     const bySpecialization = await query(
-      `SELECT s.name, count(a.id)::int AS appointments, count(DISTINCT d.id)::int AS doctors
+      `SELECT s.name, s.slug, count(a.id)::int AS appointments, count(DISTINCT d.id)::int AS doctors
          FROM specializations s LEFT JOIN doctors d ON d.specialization_id = s.id
          LEFT JOIN appointments a ON a.doctor_id = d.id
-        GROUP BY s.name ORDER BY appointments DESC`,
+        GROUP BY s.name, s.slug ORDER BY appointments DESC`,
     );
     const roles = await query("SELECT role, count(*)::int AS count FROM users GROUP BY role");
     return ok({ role: "admin", totals, by_status: byStatus, monthly, by_specialization: bySpecialization, roles });
@@ -47,15 +49,17 @@ export const GET = handler(async () => {
               count(*) FILTER (WHERE scheduled_at >= now() AND status IN ('pending','confirmed'))::int AS upcoming,
               count(*) FILTER (WHERE status='pending')::int AS pending,
               count(*) FILTER (WHERE status='completed')::int AS completed,
-              count(DISTINCT patient_id)::int AS patients
+              count(DISTINCT patient_id)::int AS patients,
+              (SELECT rating::float FROM doctors WHERE id = $1) AS rating,
+              (SELECT review_count FROM doctors WHERE id = $1) AS review_count
          FROM appointments WHERE doctor_id = $1`,
       [user.doctor_id, start.toISOString(), end.toISOString()],
     );
     const byStatus = await query("SELECT status, count(*)::int AS count FROM appointments WHERE doctor_id=$1 GROUP BY status", [user.doctor_id]);
     const weekly = await query(
-      `SELECT to_char(date_trunc('week', scheduled_at), 'DD Mon') AS week, date_trunc('week', scheduled_at) AS w, count(*)::int AS total
+      `SELECT date_trunc('week', scheduled_at) AS w, count(*)::int AS total
          FROM appointments WHERE doctor_id=$1 AND scheduled_at >= now() - interval '10 weeks' AND scheduled_at < now() + interval '2 weeks'
-        GROUP BY 1,2 ORDER BY 2`,
+        GROUP BY 1 ORDER BY 1`,
       [user.doctor_id],
     );
     return ok({ role: "doctor", totals, by_status: byStatus, weekly });

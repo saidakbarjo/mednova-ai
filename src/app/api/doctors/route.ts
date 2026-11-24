@@ -45,8 +45,8 @@ export const GET = handler(async (req: Request) => {
 export const POST = handler(async (req: Request) => {
   await requireUser("admin");
   const b = await parseBody(req, doctorCreateSchema);
-  if (await one("SELECT 1 FROM users WHERE email=$1", [b.email])) throw Errors.conflict("An account with this email already exists.");
-  if (!(await one("SELECT 1 FROM specializations WHERE id=$1", [b.specialization_id]))) throw Errors.badRequest("Unknown specialization.");
+  if (await one("SELECT 1 FROM users WHERE email=$1", [b.email])) throw Errors.conflict("e.emailTaken");
+  if (!(await one("SELECT 1 FROM specializations WHERE id=$1", [b.specialization_id]))) throw Errors.badRequest("e.unknownSpec");
   const hash = await bcrypt.hash(b.password, 12);
   const id = await transaction(async (tx) => {
     const [u] = await tx.query<{ id: string }>(

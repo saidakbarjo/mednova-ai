@@ -1,0 +1,10 @@
+{
+  "name": "MEDNOVA AI",
+  "short_name": "MEDNOVA",
+  "description": "Aqlli tibbiyot platformasi — Saidakbar & Zukhra",
+  "start_url": "/dashboard",
+  "display": "standalone",
+  "background_color": "#050A18",
+  "theme_color": "#0A1633",
+  "icons": [{ "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }]
+}

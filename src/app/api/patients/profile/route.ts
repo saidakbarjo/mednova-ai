@@ -12,13 +12,13 @@ const SELECT = `SELECT p.id, u.full_name, u.email, p.date_of_birth::text AS date
 
 export const GET = handler(async () => {
   const user = await requireUser("patient");
-  if (!user.patient_id) throw Errors.notFound("Patient profile");
+  if (!user.patient_id) throw Errors.notFound("e.profileNotFound");
   return ok(await one(SELECT, [user.patient_id]));
 });
 
 export const PUT = handler(async (req: Request) => {
   const user = await requireUser("patient");
-  if (!user.patient_id) throw Errors.notFound("Patient profile");
+  if (!user.patient_id) throw Errors.notFound("e.profileNotFound");
   const b = await parseBody(req, patientProfileSchema);
   await transaction(async (tx) => {
     const cols = ["date_of_birth", "gender", "phone", "blood_type", "height_cm", "weight_kg", "allergies", "chronic_conditions", "emergency_contact"] as const;

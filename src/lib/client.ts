@@ -7,7 +7,7 @@ export class ClientApiError extends Error {
   }
 }
 
-/** Typed fetch wrapper around the MEDNOVA REST API envelope. */
+/** Typed fetch wrapper around the MEDNOVA REST API envelope. Error messages arrive already translated. */
 export async function api<T = unknown>(path: string, init?: { method?: string; body?: unknown }): Promise<T> {
   const res = await fetch(path, {
     method: init?.method ?? "GET",
@@ -20,7 +20,7 @@ export async function api<T = unknown>(path: string, init?: { method?: string; b
     if (res.status === 401 && typeof window !== "undefined" && window.location.pathname.startsWith("/dashboard")) {
       window.location.href = `/login?next=${encodeURIComponent(window.location.pathname)}`;
     }
-    throw new ClientApiError(res.status, json?.error?.code ?? "ERROR", json?.error?.message ?? "Request failed.", json?.error?.details);
+    throw new ClientApiError(res.status, json?.error?.code ?? "ERROR", json?.error?.message ?? "Error", json?.error?.details);
   }
   return json.data as T;
 }

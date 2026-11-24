@@ -46,14 +46,14 @@ export const POST = handler(async (req: Request) => {
   if (!user.patient_id) throw Errors.forbidden();
   const b = await parseBody(req, appointmentCreateSchema);
   const when = new Date(b.scheduled_at);
-  if (when.getTime() < Date.now() + 30 * 60 * 1000) throw Errors.badRequest("Please choose a time at least 30 minutes from now.");
-  if (when.getTime() > Date.now() + 180 * 86400000) throw Errors.badRequest("Appointments can be booked up to 6 months ahead.");
+  if (when.getTime() < Date.now() + 30 * 60 * 1000) throw Errors.badRequest("e.tooSoon");
+  if (when.getTime() > Date.now() + 180 * 86400000) throw Errors.badRequest("e.tooFar");
 
   const doctor = await one<{ id: string; user_id: string; is_verified: boolean; full_name: string }>(
     "SELECT d.id, d.user_id, d.is_verified, u.full_name FROM doctors d JOIN users u ON u.id=d.user_id WHERE d.id=$1 AND u.is_active",
     [b.doctor_id],
   );
-  if (!doctor || !doctor.is_verified) throw Errors.notFound("Doctor");
+  if (!doctor || !doctor.is_verified) throw Errors.notFound("e.doctorNotFound");
 
   // Server-side check that the time is a real slot in the doctor's working hours
   const pad = (n: number) => String(n).padStart(2, "0");
@@ -64,13 +64,13 @@ export const POST = handler(async (req: Request) => {
     [doctor.id, when.getDay()],
   );
   const valid = sched && buildSlots(localDate, sched.start_time, sched.end_time, sched.slot_minutes).some((s) => s.getTime() === when.getTime());
-  if (!valid) throw Errors.badRequest("This time is outside the doctor's working hours.");
+  if (!valid) throw Errors.badRequest("e.outsideHours");
 
   const clash = await one(
     "SELECT 1 FROM appointments WHERE patient_id=$1 AND scheduled_at=$2 AND status IN ('pending','confirmed')",
     [user.patient_id, when.toISOString()],
   );
-  if (clash) throw Errors.conflict("You already have an appointment at this time.");
+  if (clash) throw Errors.conflict("e.patientClash");
 
   const id = await transaction(async (tx) => {
     const [a] = await tx.query<{ id: string }>(
@@ -78,9 +78,9 @@ export const POST = handler(async (req: Request) => {
        VALUES ($1,$2,$3,$4,$5,$6) RETURNING id`,
       [user.patient_id, doctor.id, when.toISOString(), sched!.slot_minutes, b.reason, b.visit_type],
     );
-    const label = when.toLocaleString("en-GB", { weekday: "short", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
-    await notify(doctor.user_id, "appointment", "New booking request", `${user.full_name} requested ${label}.`, "/dashboard/doctor/appointments", tx);
-    await notify(user.id, "appointment", "Booking request sent", `Waiting for ${doctor.full_name} to confirm ${label}.`, "/dashboard/patient/appointments", tx);
+    const whenIso = when.toISOString();
+    await notify(doctor.user_id, "appointment", "bookingRequest", { patient: user.full_name, when: whenIso }, "/dashboard/doctor/appointments", tx);
+    await notify(user.id, "appointment", "bookingSent", { doctor: doctor.full_name, when: whenIso }, "/dashboard/patient/appointments", tx);
     return a.id;
   });
   return ok(await one(`${APPOINTMENT_SELECT} WHERE a.id = $1`, [id]), 201);

@@ -86,8 +86,10 @@ const g = globalThis as unknown as { __mednovaDb?: Promise<Engine> };
 async function init(): Promise<Engine> {
   const engine = await createEngine();
   const dir = path.join(process.cwd(), "supabase", "migrations");
-  // 001 is portable; 002 (RLS for Supabase roles) only applies on Supabase.
-  await engine.exec(fs.readFileSync(path.join(dir, "001_schema.sql"), "utf8"));
+  // Portable migrations run automatically in order. Files mentioning RLS / Supabase
+  // roles (002, 004) are applied manually in the Supabase SQL editor.
+  const files = fs.readdirSync(dir).filter((f) => /^\d+_.*\.sql$/.test(f) && !/row_level_security|_rls/.test(f)).sort();
+  for (const f of files) await engine.exec(fs.readFileSync(path.join(dir, f), "utf8"));
   const { seedIfEmpty } = await import("./seed");
   await seedIfEmpty(engine);
   return engine;

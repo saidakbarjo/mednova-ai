@@ -96,3 +96,15 @@ npm install
 npm run dev                 # http://localhost:3000
 npm run test:api            # with the dev server running
 ```
+
+---
+
+## v2 upgrade (Uzbek-first, design & features)
+
+- **i18n**: `src/i18n/*` — uz (new Latin, default), uz-old (auto-converted), ru, en; 843 keys each; localized API errors (`ApiError` carries keys), validation keys, notifications stored as keys + params, Uzbek date/month names.
+- **AI**: trilingual safety rules + knowledge base (`src/lib/ai/*`), reply language detection, uz-old conversion, LLM prompt asks for the new Uzbek alphabet.
+- **Database**: `003_reviews_and_i18n.sql` (reviews table, notifications.params, users.locale), `004_reviews_rls.sql`; migrations auto-run in order (RLS files manual on Supabase).
+- **Features**: reviews (`POST /api/reviews`, `GET /api/doctors/:id/reviews`), dark mode, Ctrl+K command palette, print/PDF records, typewriter + copy in chat, doctor sorting, profile completeness, countdown, PWA manifest.
+- **Design**: CSS-variable design tokens (light/dark), aurora backgrounds, count-up stats, specialties marquee, bento features, FAQ, page transitions.
+- **Fix**: newer Chrome returns a Promise from `scrollIntoView`; it is no longer returned from a React effect.
+- **Tests**: 78 checks, all passing; zero browser console errors across uz / uz-old / ru / en, light and dark, desktop and mobile.

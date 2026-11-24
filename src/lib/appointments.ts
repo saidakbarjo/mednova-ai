@@ -3,7 +3,8 @@ export const APPOINTMENT_SELECT = `
          a.cancelled_by, a.created_at, a.updated_at,
          a.patient_id, pu.full_name AS patient_name, pu.id AS patient_user_id,
          a.doctor_id, du.full_name AS doctor_name, du.id AS doctor_user_id,
-         d.clinic_name, d.city, s.name AS specialization
+         d.clinic_name, d.city, s.name AS specialization, s.slug AS specialization_slug,
+         (SELECT rv.rating FROM reviews rv WHERE rv.appointment_id = a.id) AS my_rating
     FROM appointments a
     JOIN patients p  ON p.id = a.patient_id
     JOIN users pu    ON pu.id = p.user_id

@@ -1,227 +1,94 @@
-# MEDNOVA AI — Intelligent Healthcare Platform
+# MEDNOVA AI — Aqlli tibbiyot platformasi (v2)
 
-> University project by **Saidakbar & Zukhra**
+> Universitet loyihasi · **Saidakbar va Zukhra**
 
-MEDNOVA AI connects **patients**, **doctors** and **administrators** on one platform. Patients can find verified specialists, book appointments in real time, keep their medical records together and use an educational AI assistant. Doctors manage their agenda, patients and schedule. Administrators verify doctors, manage users and watch platform analytics.
+MEDNOVA AI **bemorlar**, **şifokorlar** va **administratorlarni** bitta platformada birlaştiradi: tasdiqlangan şifokorlarni qidiriş, real vaqtda qabulga yoziliş, tibbiy yozuvlar, sharhlar, salomatlik diagrammalari va xavfsiz ta’limiy AI yordamçi.
 
-> ⚠️ This is an educational project, not a medical device. It does not diagnose and does not provide emergency care. All people and medical data are **fictional**.
+> ⚠️ Bu ta’limiy loyiha: taşxis qöymaydi va şoşilinç yordam körsatmaydi. Barça odamlar va tibbiy ma’lumotlar **xayoliy**. Favqulodda holatda — **103**.
 
----
+## 1. Tezkor işga tuşiriş (sozlamasiz)
 
-## 1. Quick start (no setup needed)
-
-Requirements: **Node.js 18.18+** (20 or 22 recommended).
+Talab: **Node.js 18.18+** (20 yoki 22 tavsiya etiladi).
 
 ```bash
 npm install
-cp .env.example .env.local     # optional for local use — defaults work
-npm run dev
+npm run dev          # http://localhost:3000
 ```
 
-Open **http://localhost:3000**. On the first request the app creates the PostgreSQL schema and loads fictional demo data automatically. With no `DATABASE_URL`, it uses **PGlite**, the real PostgreSQL engine compiled to WebAssembly, saved in `./.data/`.
+Birinçi sörovda ilova PostgreSQL sxemasini yaratadi va xayoliy demo ma’lumotlarni yuklaydi (**PGlite** — WebAssembly’dagi haqiqiy PostgreSQL, `./.data/` papkasida). Ma’lumotlarni qayta tiklaş: serverni töxtating, `.data` papkasini öçiring va qayta işga tuşiring.
 
-### Demo accounts (password for all: `Demo1234!`)
+### Demo hisoblar (parol: `Demo1234!`)
 
-| Role | Email | What you'll see |
+| Rol | Email | Nimani körasiz |
 |---|---|---|
-| Patient | `patient@mednova.demo` | Jordan Ellis: 8 months of vitals, lab results, upcoming and past visits |
-| Doctor | `doctor@mednova.demo` | Dr. Amelia Hart (Cardiology): today's agenda, patients, calendar |
-| Admin | `admin@mednova.demo` | Analytics, user management, 2 doctors awaiting verification |
+| Bemor | `patient@mednova.demo` | Sardor Aminov — 8 oylik körsatkiçlar, tahlillar, qabullar, sharhlar |
+| Şifokor | `doctor@mednova.demo` | Dr. Malika Hasanova (kardiologiya) — bugungi jadval, bemorlar, kalendar |
+| Admin | `admin@mednova.demo` | Tahlil, foydalanuvçilar, tasdiqlaşni kutayotgan 2 şifokor |
 
-The login page also has one-click demo buttons.
+## 2. v2 da nima yangi
 
-### Reset the demo database
-Stop the server, delete the `.data` folder and start again. The data will be re-seeded.
+- **3 til, 2 alifbo**: özbek (yangi lotin — ö, ğ, ş, ç — standart), özbek (amaldagi lotin — avtomatik konvertatsiya), rus, ingliz. Interfeys, API xato xabarlari, bildirişlar va **AI yordamçi** — hammasi tarjima qilingan. Tilni 🌐 belgisi orqali almaştiring.
+- **AI yordamçi uç tilda**: özbekça/ruscha savollarni tuşunadi, şoşilinç belgilarni (masalan, «kökragimda oğriq, çap qölimga tarqalyapti», «не могу дышать») taniydi va 103 ga yönaltiradi; doza sörovlarini rad etadi.
+- **Yoruğ / qoronği mavzu** (tizim sozlamasiga mos, miltillamaydi).
+- **Bemor sharhlari**: yakunlangan qabulni 1–5★ baholaş, şifokor reytingi avtomatik yangilanadi; yangi `reviews` jadvali (jami 11 jadval).
+- **Ctrl+K buyruqlar palitrasi**: istalgan sahifaga ötiş, şifokor qidiriş, mavzuni almaştiriş.
+- **Yangi dizayn**: aurora fonlar, animatsion hisoblagiçlar, yönalişlar lentasi, bento grid, FAQ, sahifa ötiş animatsiyalari, gradient kartalar.
+- **Qöşimça**: tibbiy yozuvlarni çop etiş / PDF, AI javoblari «yozuv maşinkasi» effekti va nusxa oliş, şifokorlarni saralaş, profil töliqligi körsatkiçi, qabulgaça qolgan kunlar, PWA manifest.
+- Narxlar **söm**da; demo ma’lumotlar özbekça (Toşkent, Samarqand, Buxoro, Namangan).
 
----
+## 3. Supabase bilan işlatiş (production)
 
-## 2. Production setup with Supabase
-
-1. Create a Supabase project.
-2. Run `supabase/migrations/001_schema.sql`, then `002_row_level_security.sql`, in the **SQL Editor**. The app also applies 001 automatically on start.
-3. Copy the connection string: **Project Settings → Database → Connection string (URI, Session pooler)**.
-4. Set the environment variables:
+1. Supabase loyihasini yarating.
+2. **SQL Editor**’da ketma-ket bajaring: `001_schema.sql`, `003_reviews_and_i18n.sql`, `002_row_level_security.sql`, `004_reviews_rls.sql` (001 va 003 ilova işga tuşganda avtomatik ham bajariladi).
+3. Muhit özgaruvçilari:
 
 ```bash
-DATABASE_URL=postgresql://postgres.xxxx:PASSWORD@aws-0-eu-central-1.pooler.supabase.com:5432/postgres
+DATABASE_URL=postgresql://postgres.xxxx:PAROL@aws-0-eu-central-1.pooler.supabase.com:5432/postgres
 JWT_SECRET=$(openssl rand -base64 48)
-ANTHROPIC_API_KEY=            # optional; without it the assistant runs in demo mode
+ANTHROPIC_API_KEY=        # ixtiyoriy; bölmasa AI demo rejimda işlaydi
 ```
 
-5. Run `npm run build && npm start`, or deploy to Vercel. **On Vercel you must set `DATABASE_URL`**, because the filesystem is read-only and PGlite can't store its files there.
+4. `npm run build && npm start` yoki Vercel’ga deploy (Vercel’da `DATABASE_URL` majburiy).
 
-> In production the session cookie is marked `Secure`, so the site must be served over **HTTPS** (`localhost` is fine). To test `npm start` over plain HTTP on another machine, set `MEDNOVA_INSECURE_COOKIES=1`. Never set it in a real deployment.
+Productionda sessiya cookie’si `Secure` — sayt **HTTPS** orqali oçilişi kerak (`localhost` mumkin).
 
-### Environment variables
-
-| Variable | Required | Purpose |
-|---|---|---|
-| `DATABASE_URL` | Production | PostgreSQL / Supabase connection. Empty → embedded PGlite |
-| `JWT_SECRET` | Production | Signs session tokens (≥ 32 chars). Dev uses a built-in fallback |
-| `ANTHROPIC_API_KEY` | No | Enables the live AI model. Otherwise: **demo mode** with curated answers |
-| `ANTHROPIC_MODEL` | No | Defaults to `claude-sonnet-4-5` |
-
-All secrets are read **only on the server** and are never sent to the browser.
-
----
-
-## 3. Features
-
-**Patient:** personalised dashboard · next-appointment banner · health charts (blood pressure, heart rate, weight) · health overview (BMI, blood type) · log vitals · doctor search and filters · live slot booking · reschedule and cancel · medical records timeline (visit notes, lab tables, vaccinations, vitals) · health profile · notifications.
-
-**Doctor:** today's agenda with confirm / complete / cancel · completing a visit with notes **automatically creates a medical record** · patient list with visit history and records · add clinical notes · monthly calendar · editable weekly working hours and slot length · professional profile.
-
-**Admin:** platform analytics (users, doctors, appointments by month, status donut, demand by specialty) · user search and activate/deactivate · doctor verification (approve / revoke) · create doctor accounts.
-
-**AI assistant:** chat with saved conversation history · suggested questions · typing animation · **symptom information** tool (urgency, specialists, questions for your doctor) · safety banner · demo mode / live mode badge.
-
-**University presentation mode:** `/presentation` covers the overview, tech stack, architecture diagram, booking workflow, **ERD**, full **API reference**, security, demo accounts and a demo script, and credits.
-
----
-
-## 4. Architecture
+## 4. Arxitektura
 
 ```
-Browser (React pages, Tailwind, Framer Motion, Recharts)
-   │  fetch /api/*  (httpOnly session cookie)
+Brauzer (React, Tailwind, Framer Motion, Recharts, i18n)
+   │ fetch /api/*  (httpOnly cookie + mednova_lang cookie)
    ▼
-Edge middleware ── verifies JWT, keeps each role in its own dashboard
+Edge middleware — JWT tekşiruvi, rollar böyiça kabinetlar
    ▼
 REST API (Next.js Route Handlers)
-   ├─ requireUser(role…)   DB-backed authentication + RBAC
-   ├─ Zod validation       every write
-   ├─ business rules       slots, status transitions, ownership
-   └─ AI service           safety layer → LLM or demo knowledge base
+   ├─ requireUser(role…)  bazaga asoslangan RBAC
+   ├─ Zod validatsiya     xatolar foydalanuvçi tilida
+   ├─ biznes qoidalari    vaqtlar, holat ötişlari, sharhlar
+   └─ AI xizmati          xavfsizlik qatlami → LLM yoki bilimlar bazasi (uz/ru/en)
    ▼
-Data layer (src/lib/db.ts) ── parameterised SQL, transactions
+src/lib/db.ts — parametrlangan SQL, tranzaksiyalar
    ▼
-PostgreSQL  ── Supabase (production) or PGlite (local, zero-setup)
+PostgreSQL — Supabase yoki PGlite
 ```
 
-**Key decision: one schema, two engines.** The same migration files and the same SQL run on Supabase and on PGlite. Professors can run the full system with one command and no cloud account, and nothing is a frontend-only mock.
+**i18n**: `src/i18n/` — `dict/uz.ts`, `dict/ru.ts`, `dict/en.ts` (har birida 843 kalit), `config.ts` (alifbo konvertori), `format.ts` (özbekça sana/oy nomlari). Bildirişlar bazada kalit + parametr sifatida saqlanadi va har bir foydalanuvçiga öz tilida körsatiladi.
 
-**Why custom JWT sessions instead of Supabase Auth?** The backend handles authentication itself (bcrypt + signed httpOnly cookie). This keeps the app portable (it runs without Supabase) and shows the authentication logic clearly for the evaluation. Supabase is used as the PostgreSQL database. RLS is enabled to block Supabase's public API roles from reaching any medical data.
-
-### Project structure
-
-```
-src/
-  app/
-    page.tsx                     Landing page (live DB stats, doctor showcase)
-    login/ register/             Authentication pages
-    doctors/ doctors/[id]/       Public directory + profile & booking
-    presentation/                University presentation mode
-    dashboard/
-      layout.tsx                 Auth guard + role-aware shell
-      patient/ …                 Overview, appointments, find, records
-      doctor/ …                  Today, appointments, patients, schedule
-      admin/ …                   Analytics, users, doctor verification
-      assistant/  profile/       Shared pages
-    api/                         REST API (see section 5)
-  components/                    UI kit, charts, dashboard, marketing, presentation
-  lib/
-    db.ts  seed.ts               Database engine + fictional seed data
-    auth.ts session.ts           Sessions, RBAC
-    validation.ts api.ts         Zod schemas, response envelope, errors
-    ai/                          safety.ts, knowledge.ts, assistant.ts
-  middleware.ts                  Route protection
-supabase/migrations/             001_schema.sql, 002_row_level_security.sql
-scripts/api-test.ts              End-to-end API test suite (61 checks)
-docs/DEVELOPMENT_REPORT.md       Phase-by-phase report
-```
-
----
-
-## 5. REST API
-
-Every response uses one envelope:
-```json
-{ "success": true,  "data": { } }
-{ "success": false, "error": { "code": "VALIDATION_ERROR", "message": "…", "details": [ ] } }
-```
-
-| Method | Endpoint | Access |
-|---|---|---|
-| POST | `/api/auth/register` | Public |
-| POST | `/api/auth/login` | Public (rate-limited) |
-| POST | `/api/auth/logout` | Any |
-| GET | `/api/auth/me` | Signed in |
-| GET | `/api/doctors` | Public (admin: `?include_unverified=1`) |
-| GET | `/api/doctors/:id` | Public |
-| POST | `/api/doctors` | Admin |
-| PUT | `/api/doctors/:id` | Doctor (own) / Admin (only admin can verify) |
-| GET | `/api/doctors/:id/slots?date=YYYY-MM-DD` | Public |
-| GET | `/api/doctor/patients` | Doctor |
-| GET | `/api/appointments` | Role-scoped |
-| POST | `/api/appointments` | Patient |
-| PUT | `/api/appointments/:id` | Participant / Admin |
-| DELETE | `/api/appointments/:id` | Participant (soft-cancel) / Admin (delete) |
-| GET / PUT | `/api/patients/profile` | Patient |
-| GET / POST | `/api/patients/records` | Patient / Doctor (own patients only) |
-| POST | `/api/ai/chat` | Signed in |
-| POST | `/api/ai/symptom-information` | Signed in |
-| GET | `/api/ai/conversations`, `/api/ai/conversations/:id` | Owner |
-| GET | `/api/analytics/overview` | Role-aware |
-| GET / PUT | `/api/admin/users`, `/api/admin/users/:id` | Admin |
-| GET / PUT | `/api/notifications` | Signed in |
-| GET | `/api/specializations`, `/api/health` | Public |
-
-Full details with request bodies are at **/presentation#api**.
-
----
-
-## 6. Database
-
-10 tables: `users`, `patients`, `doctors`, `specializations`, `appointments`, `medical_records`, `conversations`, `messages`, `notifications`, `doctor_schedules`.
-
-- UUID primary keys, foreign keys with deliberate `ON DELETE` behaviour (CASCADE / RESTRICT / SET NULL)
-- `CHECK` constraints on every enum and range (role, status, blood type, height, weight, times)
-- Indexes on every frequent lookup, plus a **partial unique index** that makes double-booking impossible:
-  `UNIQUE (doctor_id, scheduled_at) WHERE status IN ('pending','confirmed')`
-- `updated_at` triggers
-- Row Level Security (Supabase) — `002_row_level_security.sql`
-
-The diagram is at **/presentation#database**.
-
----
-
-## 7. Security
-
-- **Passwords:** bcrypt (cost 12). A dummy hash is compared for unknown emails, so response timing doesn't reveal which accounts exist.
-- **Sessions:** HS256 JWT in an `httpOnly`, `SameSite=Lax`, `Secure` (production) cookie that expires after 8 hours.
-- **Authorization:** `requireUser()` re-loads the user from the database on every request, so a deactivated account loses access immediately. Middleware also guards the dashboard pages.
-- **Least privilege:** doctors can only see records of patients they have treated. **Admins cannot read clinical records.**
-- **Validation:** Zod on the server, database constraints as a second layer, and parameterised SQL only.
-- **Rate limiting:** applied to login, registration and AI endpoints.
-- **Safe errors:** generic 500 messages; details are logged on the server only.
-- **Security headers:** `X-Frame-Options: DENY`, `nosniff`, a strict referrer policy and a permissions policy.
-- **XSS:** chat markdown is HTML-escaped before it is formatted.
-
-## 8. AI assistant safety
-
-A deterministic safety layer runs **before** any AI response:
-
-1. **Emergency detection:** chest pain spreading to the arm or jaw, stroke signs, breathing difficulty, heavy bleeding, overdose, self-harm and more. The assistant gives an immediate instruction to call **103** (Uzbekistan) or **112** (EU).
-2. **Dosage and prescription requests** are declined, and the user is pointed to a doctor or pharmacist.
-3. Otherwise: the LLM, with a strict system prompt, if `ANTHROPIC_API_KEY` is set. If not, or if the LLM call fails, **demo mode** answers from a curated knowledge base of 25 educational topics.
-4. Every answer ends with a disclaimer. The assistant never claims to diagnose or to be a doctor.
-
----
-
-## 9. Testing
+## 5. Testlar
 
 ```bash
-npm run dev            # in one terminal
-npm run test:api       # in another: 61 end-to-end checks
-npm run typecheck
-npm run lint
-npm run build
+npm run dev            # bir terminalda
+npm run test:api       # ikkinçisida — 78 ta end-to-end tekşiruv
+npm run typecheck && npm run lint && npm run build
 ```
 
-The test suite covers authentication, validation, RBAC (403/404 cases), booking rules (working hours, double booking, status transitions), automatic visit records, admin verification and deactivation, analytics, and the AI safety behaviour. It passes on both PGlite and real PostgreSQL 16.
+Testlar: autentifikatsiya, RBAC, yoziliş qoidalari, sharhlar, tarjima qilingan xatolar, özbek/rus tilidagi şoşilinç holatni aniqlaş, eski alifboga konvertatsiya va boşqalar. PGlite va haqiqiy PostgreSQL 16 da tekşirilgan.
+
+## 6. Xavfsizlik
+
+bcrypt (cost 12) · httpOnly/SameSite JWT sessiyalar (8 soat) · har sörovda bazadan RBAC · admin klinik yozuvlarni öqiy olmaydi · Zod + baza CHECK çeklovlari · faqat parametrlangan SQL · rate limiting · xavfsizlik sarlavhalari · XSS-xavfsiz suhbat · AI: deterministik şoşilinç aniqlaş (3 tilda), doza/retsept rad etiladi.
+
+To‘liq API qöllanmasi, ERD va namoyiş ssenariysi: **/presentation**. Inglizça README: `docs/README.en.md`.
 
 ---
 
-## 10. Credits
-
-**Designed & developed by Saidakbar & Zukhra** — Project: **MEDNOVA AI**
+**Loyihalaştirgan va işlab çiqqan: Saidakbar va Zukhra** — MEDNOVA AI

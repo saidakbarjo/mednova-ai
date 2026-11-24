@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic";
 
 export const GET = handler(async () => {
   const user = await requireUser();
-  return ok(await query("SELECT id, type, title, body, link, is_read, created_at FROM notifications WHERE user_id=$1 ORDER BY created_at DESC LIMIT 30", [user.id]));
+  return ok(await query("SELECT id, type, title, body, params, link, is_read, created_at FROM notifications WHERE user_id=$1 ORDER BY created_at DESC LIMIT 30", [user.id]));
 });
 
 /** PUT /api/notifications — mark all as read */

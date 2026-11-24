@@ -45,3 +45,4 @@ DROP POLICY IF EXISTS "backend full access" ON medical_records;
 CREATE POLICY "backend full access" ON medical_records TO postgres USING (true) WITH CHECK (true);
 DROP POLICY IF EXISTS "backend full access" ON messages;
 CREATE POLICY "backend full access" ON messages TO postgres USING (true) WITH CHECK (true);
+

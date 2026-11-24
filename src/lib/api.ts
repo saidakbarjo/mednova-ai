@@ -1,25 +1,28 @@
 import { NextResponse } from "next/server";
 import { ZodError, type ZodSchema } from "zod";
+import { getT } from "@/i18n/server";
+import type { Params } from "@/i18n";
 
 /**
  * Consistent API envelope:
  *   success → { success: true,  data }
  *   failure → { success: false, error: { code, message, details? } }
+ * Messages are i18n keys translated into the caller's language (cookie `mednova_lang`).
  * Internal errors are logged server-side and never leaked to clients.
  */
 export class ApiError extends Error {
-  constructor(public status: number, public code: string, message: string, public details?: unknown) {
+  constructor(public status: number, public code: string, message: string, public params?: Params) {
     super(message);
   }
 }
 
 export const Errors = {
-  unauthorized: () => new ApiError(401, "UNAUTHORIZED", "Please sign in to continue."),
-  forbidden: (msg = "You do not have permission to perform this action.") => new ApiError(403, "FORBIDDEN", msg),
-  notFound: (what = "Resource") => new ApiError(404, "NOT_FOUND", `${what} not found.`),
-  conflict: (msg: string) => new ApiError(409, "CONFLICT", msg),
-  badRequest: (msg: string, details?: unknown) => new ApiError(400, "BAD_REQUEST", msg, details),
-  tooMany: () => new ApiError(429, "RATE_LIMITED", "Too many requests. Please wait a moment and try again."),
+  unauthorized: () => new ApiError(401, "UNAUTHORIZED", "e.unauthorized"),
+  forbidden: (key = "e.forbidden") => new ApiError(403, "FORBIDDEN", key),
+  notFound: (key = "e.notFound") => new ApiError(404, "NOT_FOUND", key),
+  conflict: (key: string) => new ApiError(409, "CONFLICT", key),
+  badRequest: (key: string, params?: Params) => new ApiError(400, "BAD_REQUEST", key, params),
+  tooMany: () => new ApiError(429, "RATE_LIMITED", "e.tooMany"),
 };
 
 export function ok<T>(data: T, status = 200) {
@@ -27,34 +30,33 @@ export function ok<T>(data: T, status = 200) {
 }
 
 export function fail(err: unknown) {
+  const { t, dict } = getT();
+  const tr = (key: string, params?: Params) => (key in dict ? t(key, params) : key);
   if (err instanceof ApiError) {
-    return NextResponse.json(
-      { success: false, error: { code: err.code, message: err.message, ...(err.details ? { details: err.details } : {}) } },
-      { status: err.status },
-    );
+    return NextResponse.json({ success: false, error: { code: err.code, message: tr(err.message, err.params) } }, { status: err.status });
   }
   if (err instanceof ZodError) {
+    const msg = (i: ZodError["issues"][number]) =>
+      i.message in dict ? t(i.message) : i.code === "invalid_type" && i.received === "undefined" ? t("v.required") : t("v.invalid");
     return NextResponse.json(
       {
         success: false,
         error: {
           code: "VALIDATION_ERROR",
-          message: err.issues[0]?.message ?? "Invalid input.",
-          details: err.issues.map((i) => ({ field: i.path.join("."), message: i.message })),
+          message: err.issues[0] ? msg(err.issues[0]) : t("v.invalid"),
+          details: err.issues.map((i) => ({ field: i.path.join("."), message: msg(i) })),
         },
       },
       { status: 422 },
     );
   }
-  // Postgres unique violation → 409 without leaking internals
   if (typeof err === "object" && err && "code" in err && (err as { code: string }).code === "23505") {
-    return NextResponse.json({ success: false, error: { code: "CONFLICT", message: "This record already exists or the slot is taken." } }, { status: 409 });
+    return NextResponse.json({ success: false, error: { code: "CONFLICT", message: t("e.conflict") } }, { status: 409 });
   }
   console.error("[api] unexpected error", err);
-  return NextResponse.json({ success: false, error: { code: "INTERNAL_ERROR", message: "Something went wrong. Please try again." } }, { status: 500 });
+  return NextResponse.json({ success: false, error: { code: "INTERNAL_ERROR", message: t("e.internal") } }, { status: 500 });
 }
 
-/** Wrap a route handler so every thrown error becomes a safe JSON response. */
 export function handler<A extends unknown[]>(fn: (...args: A) => Promise<Response>) {
   return async (...args: A) => {
     try {
@@ -70,7 +72,7 @@ export async function parseBody<T>(req: Request, schema: ZodSchema<T>): Promise<
   try {
     json = await req.json();
   } catch {
-    throw Errors.badRequest("Request body must be valid JSON.");
+    throw Errors.badRequest("e.badJson");
   }
   return schema.parse(json);
 }

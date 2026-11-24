@@ -7,10 +7,11 @@ let passed = 0, failed = 0;
 
 class Client {
   cookie = "";
+  constructor(public lang = "en") {}
   async call(method: string, path: string, body?: unknown) {
     const res = await fetch(BASE + path, {
       method,
-      headers: { "content-type": "application/json", ...(this.cookie ? { cookie: this.cookie } : {}) },
+      headers: { "content-type": "application/json", cookie: [`mednova_lang=${this.lang}`, this.cookie].filter(Boolean).join("; ") },
       body: body === undefined ? undefined : JSON.stringify(body),
       redirect: "manual",
     });
@@ -45,9 +46,9 @@ async function main() {
   r = await anon.call("GET", "/api/doctors");
   check("GET /api/doctors returns only verified doctors", r.json.data.length === 8 && r.json.data.every((d: { is_verified: boolean }) => d.is_verified));
   check("public doctor list hides emails", r.json.data.every((d: Record<string, unknown>) => !("email" in d)));
-  const hartId = r.json.data.find((d: { full_name: string }) => d.full_name === "Dr. Amelia Hart").id;
+  const hartId = r.json.data.find((d: { full_name: string }) => d.full_name === "Dr. Malika Hasanova").id;
   r = await anon.call("GET", "/api/doctors?specialization=cardiology");
-  check("filter by specialization", r.json.data.length === 1);
+  check("filter by specialization", r.json.data.length === 1 && r.json.data[0].specialization_slug === "cardiology");
   r = await anon.call("GET", `/api/doctors/${hartId}`);
   check("GET /api/doctors/:id with schedule", r.status === 200 && r.json.data.schedule.length >= 5);
 
@@ -67,6 +68,7 @@ async function main() {
   check("admin login", r.status === 200 && r.json.data.user.role === "admin");
   r = await patient.call("GET", "/api/auth/me");
   check("GET /api/auth/me", r.status === 200 && r.json.data.user.email === "patient@mednova.demo");
+  r = await patient.call("GET", "/api/auth/me");
 
   const email = `student${Date.now()}@example.com`;
   const fresh = new Client();
@@ -190,7 +192,52 @@ async function main() {
   r = await patient.call("GET", "/api/ai/conversations");
   check("GET /api/ai/conversations", r.status === 200 && r.json.data.conversations.length >= 2);
   r = await patient.call("POST", "/api/ai/symptom-information", { symptoms: ["headache", "blurred vision"], duration: "days" });
-  check("POST /api/ai/symptom-information", r.status === 200 && r.json.data.suggested_specialists.includes("Neurology") && /not a diagnosis/.test(r.json.data.disclaimer));
+  check("POST /api/ai/symptom-information", r.status === 200 && r.json.data.suggested_specialists.includes("neurology") && /not a diagnosis/.test(r.json.data.disclaimer));
+
+  console.log("\nLocalization (uz / uz-old / ru)");
+  const uzc = new Client("uz"); await uzc.login("patient@mednova.demo");
+  r = await uzc.call("POST", "/api/ai/chat", { message: "Nevrolog nima bilan shug'ullanadi?" });
+  check("uz: AI answers in Uzbek (new alphabet)", /Nevrolog/.test(r.json.data.assistant_message.content) && /ş|ğ|ö/.test(r.json.data.assistant_message.content));
+  r = await uzc.call("POST", "/api/ai/chat", { message: "Ko'kragimda kuchli og'riq, chap qo'limga tarqalyapti" });
+  check("uz: emergency detected in Uzbek → 103", r.json.data.assistant_message.is_emergency === true && /103/.test(r.json.data.assistant_message.content));
+  r = await uzc.call("POST", "/api/ai/chat", { message: "Ibuprofendan necha mg ichsam bo'ladi?" });
+  check("uz: dosage request declined in Uzbek", /doza|retsept/i.test(r.json.data.assistant_message.content) && r.json.data.assistant_message.source === "safety");
+  const old = new Client("uz-old"); await old.login("patient@mednova.demo");
+  r = await old.call("POST", "/api/ai/chat", { message: "Kardiolog nima qiladi?" });
+  check("uz-old: answer converted to current alphabet (o‘, sh)", /o‘|sh/.test(r.json.data.assistant_message.content) && !/ş|ö/.test(r.json.data.assistant_message.content));
+  const ruc = new Client("ru"); await ruc.login("patient@mednova.demo");
+  r = await ruc.call("POST", "/api/ai/chat", { message: "Чем занимается кардиолог?" });
+  check("ru: AI answers in Russian", /Кардиолог/.test(r.json.data.assistant_message.content));
+  r = await ruc.call("POST", "/api/ai/chat", { message: "Не могу дышать, губы посинели" });
+  check("ru: emergency detected in Russian", r.json.data.assistant_message.is_emergency === true);
+  r = await new Client("uz").call("POST", "/api/auth/login", { email: "nobody@mednova.demo", password: "wrong-pass-1" });
+  check("uz: API error message translated", r.status === 401 && /parol/i.test(r.json.error.message));
+  r = await new Client("ru").call("POST", "/api/auth/login", { email: "x", password: "y" });
+  check("ru: validation message translated", r.status === 422 && /почт/i.test(r.json.error.message));
+  r = await uzc.call("GET", "/api/notifications");
+  check("notifications are i18n keys + params", r.json.data.some((n: { title: string; params: object }) => n.title.startsWith("n.") && typeof n.params === "object"));
+
+  console.log("\nReviews");
+  r = await patient.call("GET", "/api/appointments?scope=past");
+  const toRate = r.json.data.find((a: { status: string; my_rating: number | null }) => a.status === "completed" && !a.my_rating);
+  const rated = r.json.data.find((a: { my_rating: number | null }) => a.my_rating);
+  check("appointments expose my_rating", !!rated && !!toRate);
+  const before = (await anon.call("GET", `/api/doctors/${toRate.doctor_id}`)).json.data.review_count;
+  r = await patient.call("POST", "/api/reviews", { appointment_id: toRate.id, rating: 5, comment: "Juda yaxşi!" });
+  check("POST /api/reviews → 201", r.status === 201);
+  r = await patient.call("POST", "/api/reviews", { appointment_id: toRate.id, rating: 4 });
+  check("second review for same visit → 409", r.status === 409);
+  r = await patient.call("POST", "/api/reviews", { appointment_id: rated.id, rating: 9 });
+  check("rating out of range → 422", r.status === 422);
+  const upcomingA = (await patient.call("GET", "/api/appointments?scope=upcoming")).json.data[0];
+  r = await patient.call("POST", "/api/reviews", { appointment_id: upcomingA.id, rating: 5 });
+  check("cannot review a non-completed visit → 400", r.status === 400);
+  r = await doctor.call("POST", "/api/reviews", { appointment_id: toRate.id, rating: 5 });
+  check("doctor cannot post reviews → 403", r.status === 403);
+  const after = (await anon.call("GET", `/api/doctors/${toRate.doctor_id}`)).json.data.review_count;
+  check("doctor review_count incremented", after === before + 1);
+  r = await anon.call("GET", `/api/doctors/${toRate.doctor_id}/reviews`);
+  check("GET /api/doctors/:id/reviews (names shortened)", r.status === 200 && r.json.data.length > 0 && r.json.data.every((x: { author: string }) => !x.author.includes("Aminov")));
 
   console.log(`\n${passed} passed, ${failed} failed\n`);
   process.exit(failed ? 1 : 0);

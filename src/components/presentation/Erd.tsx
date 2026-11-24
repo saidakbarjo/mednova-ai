@@ -15,7 +15,8 @@ const TABLES: Table[] = [
   { id: "patients", x: 320, y: 300, cols: [["id", "uuid", "PK"], ["user_id", "uuid", "FK"], ["date_of_birth", "date"], ["blood_type", "text"], ["height_cm", "numeric"], ["weight_kg", "numeric"], ["allergies", "text"]] },
   { id: "doctors", x: 620, y: 300, cols: [["id", "uuid", "PK"], ["user_id", "uuid", "FK"], ["specialization_id", "int", "FK"], ["years_experience", "int"], ["consultation_fee", "numeric"], ["rating", "numeric"], ["is_verified", "bool"]] },
   { id: "specializations", x: 920, y: 300, cols: [["id", "serial", "PK"], ["name", "text", "UQ"], ["slug", "text", "UQ"], ["description", "text"]] },
-  { id: "appointments", x: 420, y: 560, cols: [["id", "uuid", "PK"], ["patient_id", "uuid", "FK"], ["doctor_id", "uuid", "FK"], ["scheduled_at", "timestamptz"], ["status", "pending|confirmed|…"], ["reason", "text"], ["doctor_notes", "text"]] },
+  { id: "appointments", x: 470, y: 560, cols: [["id", "uuid", "PK"], ["patient_id", "uuid", "FK"], ["doctor_id", "uuid", "FK"], ["scheduled_at", "timestamptz"], ["status", "pending|confirmed|…"], ["reason", "text"], ["doctor_notes", "text"]] },
+  { id: "reviews", x: 20, y: 560, cols: [["id", "uuid", "PK"], ["appointment_id", "uuid", "FK"], ["patient_id", "uuid", "FK"], ["doctor_id", "uuid", "FK"], ["rating", "1–5"], ["comment", "text"]] },
   { id: "doctor_schedules", x: 920, y: 560, cols: [["id", "uuid", "PK"], ["doctor_id", "uuid", "FK"], ["day_of_week", "0–6"], ["start_time", "time"], ["end_time", "time"], ["slot_minutes", "int"]] },
 ];
 
@@ -44,6 +45,7 @@ const RELS: [string, string, Side, string, Side, string][] = [
   ["appointments", "doctor_id", "t", "doctors", "b", "N:1"],
   ["doctor_schedules", "doctor_id", "t", "doctors", "r", "N:1"],
   ["medical_records", "appointment_id", "b", "appointments", "l", "N:1"],
+  ["reviews", "appointment_id", "r", "appointments", "l", "1:1"],
 ];
 
 function path([x1, y1]: number[], s1: Side, [x2, y2]: number[], s2: Side) {
@@ -56,7 +58,7 @@ function path([x1, y1]: number[], s1: Side, [x2, y2]: number[], s2: Side) {
 
 export function Erd() {
   return (
-    <div className="overflow-x-auto rounded-2xl border border-line bg-white p-3">
+    <div className="overflow-x-auto rounded-2xl border border-line bg-surface p-3">
       <svg viewBox="0 0 1190 800" className="min-w-[900px]" role="img" aria-label="Database entity relationship diagram">
         <defs>
           <marker id="crow" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="10" markerHeight="10" orient="auto-start-reverse">
@@ -70,14 +72,14 @@ export function Erd() {
           return (
             <g key={i}>
               <path d={path(p1, s1, p2, s2)} fill="none" stroke="#22D3EE" strokeWidth="1.8" strokeOpacity="0.8" markerEnd="url(#crow)" />
-              <rect x={mid[0] - 15} y={mid[1] - 9} width="30" height="18" rx="9" fill="#ECFEFF" stroke="#A5F3FC" />
+              <rect x={mid[0] - 15} y={mid[1] - 9} width="30" height="18" rx="9" stroke="#22D3EE" style={{ fill: "rgb(var(--surface))" }} />
               <text x={mid[0]} y={mid[1] + 4} textAnchor="middle" fontSize="10" fontWeight="700" fill="#0E7490">{label}</text>
             </g>
           );
         })}
         {TABLES.map((t) => (
           <g key={t.id}>
-            <rect x={t.x} y={t.y} width={W} height={h(t)} rx="12" fill="white" stroke="#D9E1EC" />
+            <rect x={t.x} y={t.y} width={W} height={h(t)} rx="12" style={{ fill: "rgb(var(--surface))", stroke: "rgb(var(--line))" }} />
             <path d={`M${t.x},${t.y + 12} a12,12 0 0 1 12,-12 h${W - 24} a12,12 0 0 1 12,12 v${HEAD - 12} h-${W} z`} fill="#0A1633" />
             <text x={t.x + 14} y={t.y + 22} fontSize="13" fontWeight="700" fill="white" fontFamily="ui-monospace, monospace">{t.id}</text>
             {t.cols.map(([n, type, key], i) => {
@@ -85,8 +87,8 @@ export function Erd() {
               return (
                 <g key={n}>
                   {key && <text x={t.x + 12} y={y} fontSize="9" fontWeight="800" fill={key === "PK" ? "#D97706" : key === "FK" ? "#0891B2" : "#7C3AED"}>{key}</text>}
-                  <text x={t.x + 36} y={y} fontSize="11.5" fill="#0B1530" fontFamily="ui-monospace, monospace" fontWeight={key === "PK" ? 700 : 400}>{n}</text>
-                  <text x={t.x + W - 12} y={y} fontSize="10.5" fill="#7A869E" textAnchor="end" fontFamily="ui-monospace, monospace">{type}</text>
+                  <text x={t.x + 36} y={y} fontSize="11.5" style={{ fill: "rgb(var(--ink))" }} fontFamily="ui-monospace, monospace" fontWeight={key === "PK" ? 700 : 400}>{n}</text>
+                  <text x={t.x + W - 12} y={y} fontSize="10.5" style={{ fill: "rgb(var(--ink-muted))" }} textAnchor="end" fontFamily="ui-monospace, monospace">{type}</text>
                 </g>
               );
             })}

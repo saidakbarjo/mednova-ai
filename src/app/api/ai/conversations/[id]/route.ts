@@ -7,9 +7,9 @@ type Ctx = { params: { id: string } };
 
 export const GET = handler(async (_req: Request, { params }: Ctx) => {
   const user = await requireUser();
-  if (!isUuid(params.id)) throw Errors.notFound("Conversation");
+  if (!isUuid(params.id)) throw Errors.notFound("e.convNotFound");
   const conv = await one("SELECT id, title, created_at FROM conversations WHERE id=$1 AND user_id=$2", [params.id, user.id]);
-  if (!conv) throw Errors.notFound("Conversation");
+  if (!conv) throw Errors.notFound("e.convNotFound");
   const messages = await query(
     "SELECT id, role, content, is_emergency, source, created_at FROM messages WHERE conversation_id=$1 ORDER BY created_at",
     [params.id],
@@ -19,8 +19,8 @@ export const GET = handler(async (_req: Request, { params }: Ctx) => {
 
 export const DELETE = handler(async (_req: Request, { params }: Ctx) => {
   const user = await requireUser();
-  if (!isUuid(params.id)) throw Errors.notFound("Conversation");
+  if (!isUuid(params.id)) throw Errors.notFound("e.convNotFound");
   const rows = await query("DELETE FROM conversations WHERE id=$1 AND user_id=$2 RETURNING id", [params.id, user.id]);
-  if (!rows.length) throw Errors.notFound("Conversation");
+  if (!rows.length) throw Errors.notFound("e.convNotFound");
   return ok({ id: params.id, deleted: true });
 });

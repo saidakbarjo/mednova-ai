@@ -26,9 +26,9 @@ export const GET = handler(async (req: Request) => {
   let patientId = user.patient_id;
   if (user.role === "doctor") {
     patientId = url.searchParams.get("patient_id");
-    if (!patientId || !isUuid(patientId)) throw Errors.badRequest("patient_id is required.");
+    if (!patientId || !isUuid(patientId)) throw Errors.badRequest("e.patientIdRequired");
     const rel = await one("SELECT 1 FROM appointments WHERE doctor_id=$1 AND patient_id=$2", [user.doctor_id, patientId]);
-    if (!rel) throw Errors.forbidden("You can only view records of your own patients.");
+    if (!rel) throw Errors.forbidden("e.ownPatientsOnly");
   }
   const type = url.searchParams.get("type");
   const params: unknown[] = [patientId];
@@ -54,7 +54,7 @@ export const POST = handler(async (req: Request) => {
     const v = await parseBody(req, vitalsSchema);
     const [row] = await query(
       `INSERT INTO medical_records (patient_id, record_type, title, summary, data)
-       VALUES ($1,'vitals','Home vitals log','Self-recorded measurements',$2) RETURNING id, record_type, title, summary, data, recorded_at`,
+       VALUES ($1,'vitals','Uyda ölçangan körsatkiçlar','',$2) RETURNING id, record_type, title, summary, data, recorded_at`,
       [user.patient_id, JSON.stringify(v)],
     );
     if (v.weight_kg) await query("UPDATE patients SET weight_kg=$2 WHERE id=$1", [user.patient_id, v.weight_kg]);
@@ -65,12 +65,12 @@ export const POST = handler(async (req: Request) => {
     "SELECT p.user_id FROM appointments a JOIN patients p ON p.id=a.patient_id WHERE a.doctor_id=$1 AND a.patient_id=$2 LIMIT 1",
     [user.doctor_id, b.patient_id],
   );
-  if (!rel) throw Errors.forbidden("You can only add records for your own patients.");
+  if (!rel) throw Errors.forbidden("e.ownPatientsOnly");
   const [row] = await query(
     `INSERT INTO medical_records (patient_id, doctor_id, record_type, title, summary) VALUES ($1,$2,$3,$4,$5)
      RETURNING id, record_type, title, summary, data, recorded_at`,
     [b.patient_id, user.doctor_id, b.record_type, b.title, b.summary],
   );
-  await notify(rel.user_id, "record", "New medical record", `${user.full_name} added "${b.title}".`, "/dashboard/patient/records");
+  await notify(rel.user_id, "record", "newRecord", { doctor: user.full_name, title: b.title }, "/dashboard/patient/records");
   return ok(row, 201);
 });

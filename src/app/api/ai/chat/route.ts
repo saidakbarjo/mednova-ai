@@ -4,6 +4,7 @@ import { one, query, transaction } from "@/lib/db";
 import { generateReply } from "@/lib/ai/assistant";
 import { rateLimit } from "@/lib/rate-limit";
 import { chatSchema } from "@/lib/validation";
+import { getLocale } from "@/i18n/server";
 
 export const dynamic = "force-dynamic";
 
@@ -17,11 +18,11 @@ export const POST = handler(async (req: Request) => {
   let history: { role: "user" | "assistant"; content: string }[] = [];
   if (conversationId) {
     const conv = await one("SELECT 1 FROM conversations WHERE id=$1 AND user_id=$2", [conversationId, user.id]);
-    if (!conv) throw Errors.notFound("Conversation");
+    if (!conv) throw Errors.notFound("e.convNotFound");
     history = await query("SELECT role, content FROM messages WHERE conversation_id=$1 ORDER BY created_at", [conversationId]);
   }
 
-  const reply = await generateReply(history, b.message);
+  const reply = await generateReply(history, b.message, getLocale());
 
   const result = await transaction(async (tx) => {
     if (!conversationId) {

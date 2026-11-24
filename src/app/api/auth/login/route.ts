@@ -20,8 +20,8 @@ export const POST = handler(async (req: Request) => {
     [body.email],
   );
   const valid = await bcrypt.compare(body.password, row?.password_hash ?? DUMMY_HASH);
-  if (!row || !valid) throw new ApiError(401, "INVALID_CREDENTIALS", "Incorrect email or password.");
-  if (!row.is_active) throw new ApiError(403, "ACCOUNT_DISABLED", "This account has been deactivated. Contact support.");
+  if (!row || !valid) throw new ApiError(401, "INVALID_CREDENTIALS", "e.badCredentials");
+  if (!row.is_active) throw new ApiError(403, "ACCOUNT_DISABLED", "e.accountDisabled");
 
   await query("UPDATE users SET last_login_at = now() WHERE id = $1", [row.id]);
   await startSession({ sub: row.id, role: row.role, name: row.full_name, email: row.email });

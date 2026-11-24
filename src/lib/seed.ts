@@ -9,21 +9,21 @@ import type { Queryable } from "./db";
 
 export const DEMO_PASSWORD = "Demo1234!";
 export const DEMO_ACCOUNTS = [
-  { role: "patient", email: "patient@mednova.demo", name: "Jordan Ellis" },
-  { role: "doctor", email: "doctor@mednova.demo", name: "Dr. Amelia Hart" },
-  { role: "admin", email: "admin@mednova.demo", name: "Platform Administrator" },
+  { role: "patient", email: "patient@mednova.demo", name: "Sardor Aminov" },
+  { role: "doctor", email: "doctor@mednova.demo", name: "Dr. Malika Hasanova" },
+  { role: "admin", email: "admin@mednova.demo", name: "Platforma administratori" },
 ] as const;
 
 const SPECIALIZATIONS = [
-  ["Cardiology", "cardiology", "Heart and blood vessel health: blood pressure, rhythm problems, chest pain evaluation.", "heart-pulse"],
-  ["Neurology", "neurology", "Brain, spinal cord and nerves: headaches, seizures, numbness, memory concerns.", "brain"],
-  ["Dermatology", "dermatology", "Skin, hair and nails: rashes, acne, moles and skin cancer screening.", "scan-face"],
-  ["Orthopedics", "orthopedics", "Bones, joints, muscles and ligaments: injuries, back pain, arthritis.", "bone"],
-  ["Pediatrics", "pediatrics", "Medical care for infants, children and teenagers.", "baby"],
-  ["Endocrinology", "endocrinology", "Hormones and metabolism: diabetes, thyroid disorders, weight.", "activity"],
-  ["Ophthalmology", "ophthalmology", "Eye health and vision: check-ups, glaucoma, cataracts.", "eye"],
-  ["General Practice", "general-practice", "First point of contact for everyday health concerns and prevention.", "stethoscope"],
-  ["Psychiatry", "psychiatry", "Mental health: mood, anxiety, sleep and behavioural concerns.", "brain-circuit"],
+  ["Cardiology", "cardiology", "Yurak va qon tomirlari salomatligi: qon bosimi, ritm buzilişlari, kökrak oğriğini baholaş.", "heart-pulse"],
+  ["Neurology", "neurology", "Boş miya, orqa miya va nervlar: boş oğriği, tutqanoq, uvişiş, xotira muammolari.", "brain"],
+  ["Dermatology", "dermatology", "Teri, soç va tirnoqlar: toşmalar, husnbuzar, xollarni tekşiriş.", "scan-face"],
+  ["Orthopedics", "orthopedics", "Suyak, böğim va muşaklar: jarohatlar, bel oğriği, artrit.", "bone"],
+  ["Pediatrics", "pediatrics", "Çaqaloqlar, bolalar va ösmirlar salomatligi.", "baby"],
+  ["Endocrinology", "endocrinology", "Gormonlar va moddalar almaşinuvi: diabet, qalqonsimon bez, vazn.", "activity"],
+  ["Ophthalmology", "ophthalmology", "Köz salomatligi va köriş: körik, glaukoma, katarakta.", "eye"],
+  ["General Practice", "general-practice", "Kundalik salomatlik masalalari va profilaktika uçun birinçi murojaat.", "stethoscope"],
+  ["Psychiatry", "psychiatry", "Ruhiy salomatlik: kayfiyat, xavotir, uyqu va xulq-atvor.", "brain-circuit"],
 ] as const;
 
 type DoctorSeed = {
@@ -32,35 +32,35 @@ type DoctorSeed = {
 };
 
 const DOCTORS: DoctorSeed[] = [
-  { email: "doctor@mednova.demo", name: "Dr. Amelia Hart", spec: "cardiology", title: "MD, FACC", years: 14, fee: 60, clinic: "Northbridge Heart Centre", city: "Tashkent", languages: "English, Russian", rating: 4.9, reviews: 312, verified: true,
-    bio: "Preventive cardiologist focused on blood-pressure management and helping patients understand their heart health in plain language." },
-  { email: "r.karimov@mednova.demo", name: "Dr. Rustam Karimov", spec: "neurology", title: "MD, PhD", years: 18, fee: 70, clinic: "Silk Road Neuro Clinic", city: "Tashkent", languages: "Uzbek, Russian, English", rating: 4.8, reviews: 241, verified: true,
-    bio: "Neurologist specialising in migraine and sleep-related neurological conditions." },
-  { email: "l.okafor@mednova.demo", name: "Dr. Lina Okafor", spec: "dermatology", title: "MD", years: 9, fee: 45, clinic: "ClearSkin Dermatology", city: "Turin", languages: "English, Italian", rating: 4.7, reviews: 188, verified: true,
-    bio: "General and cosmetic dermatology with a special interest in mole mapping and early skin-cancer detection." },
-  { email: "d.weiss@mednova.demo", name: "Dr. Daniel Weiss", spec: "orthopedics", title: "MD, FRCS", years: 21, fee: 80, clinic: "Motion Orthopaedic Institute", city: "Turin", languages: "English, German", rating: 4.8, reviews: 276, verified: true,
-    bio: "Sports-medicine orthopaedic surgeon treating knee, shoulder and running injuries." },
-  { email: "m.yusupova@mednova.demo", name: "Dr. Malika Yusupova", spec: "pediatrics", title: "MD", years: 12, fee: 40, clinic: "Little Steps Children's Clinic", city: "Samarkand", languages: "Uzbek, Russian", rating: 4.9, reviews: 402, verified: true,
-    bio: "Paediatrician caring for children from newborn check-ups through adolescence." },
-  { email: "s.marino@mednova.demo", name: "Dr. Sofia Marino", spec: "endocrinology", title: "MD", years: 11, fee: 55, clinic: "Equilibrio Endocrine Care", city: "Turin", languages: "Italian, English", rating: 4.6, reviews: 133, verified: true,
-    bio: "Endocrinologist working with patients on diabetes education, thyroid health and metabolic wellbeing." },
-  { email: "k.tanaka@mednova.demo", name: "Dr. Kenji Tanaka", spec: "ophthalmology", title: "MD", years: 16, fee: 50, clinic: "Clear Vision Eye Centre", city: "Tashkent", languages: "English, Japanese", rating: 4.7, reviews: 159, verified: true,
-    bio: "Comprehensive ophthalmologist focused on glaucoma screening and digital eye strain." },
-  { email: "e.petrova@mednova.demo", name: "Dr. Elena Petrova", spec: "general-practice", title: "MD", years: 8, fee: 30, clinic: "Family Health Point", city: "Bukhara", languages: "Russian, Uzbek, English", rating: 4.8, reviews: 365, verified: true,
-    bio: "Family physician who believes great care starts with listening — preventive check-ups, everyday illness and referrals." },
-  { email: "o.haddad@mednova.demo", name: "Dr. Omar Haddad", spec: "cardiology", title: "MD", years: 6, fee: 50, clinic: "CityCare Cardiology", city: "Tashkent", languages: "Arabic, English", rating: 0, reviews: 0, verified: false,
-    bio: "Cardiologist with an interest in sports cardiology. (Awaiting verification — demo.)" },
-  { email: "g.liu@mednova.demo", name: "Dr. Grace Liu", spec: "psychiatry", title: "MD", years: 7, fee: 65, clinic: "Mindful Path Clinic", city: "Turin", languages: "English, Mandarin", rating: 0, reviews: 0, verified: false,
-    bio: "Psychiatrist focused on anxiety, sleep and young-adult mental health. (Awaiting verification — demo.)" },
+  { email: "doctor@mednova.demo", name: "Dr. Malika Hasanova", spec: "cardiology", title: "t.f.n., FACC", years: 14, fee: 250000, clinic: "Yurak Salomatligi Markazi", city: "Toşkent", languages: "Özbek, Rus, Ingliz", rating: 4.9, reviews: 312, verified: true,
+    bio: "Profilaktik kardiolog. Qon bosimini nazorat qiliş va bemorlarga yurak salomatligini sodda tilda tuşuntirişga ixtisoslaşgan." },
+  { email: "r.karimov@mednova.demo", name: "Dr. Rustam Karimov", spec: "neurology", title: "t.f.d., professor", years: 18, fee: 300000, clinic: "Ipak Yöli Nevrologiya Klinikasi", city: "Toşkent", languages: "Özbek, Rus, Ingliz", rating: 4.8, reviews: 241, verified: true,
+    bio: "Migren va uyqu bilan boğliq nevrologik holatlar böyiça mutaxassis." },
+  { email: "d.yusupova@mednova.demo", name: "Dr. Dilnoza Yusupova", spec: "dermatology", title: "Oliy toifali şifokor", years: 9, fee: 180000, clinic: "Tiniq Teri Dermatologiya Markazi", city: "Samarqand", languages: "Özbek, Rus", rating: 4.7, reviews: 188, verified: true,
+    bio: "Umumiy va kosmetik dermatologiya, xollarni xaritalaş va teri saratonini erta aniqlaş." },
+  { email: "b.aliyev@mednova.demo", name: "Dr. Bahodir Aliyev", spec: "orthopedics", title: "t.f.n.", years: 21, fee: 320000, clinic: "Harakat Ortopediya Instituti", city: "Toşkent", languages: "Özbek, Rus, Nemis", rating: 4.8, reviews: 276, verified: true,
+    bio: "Sport tibbiyoti böyiça ortoped-jarroh: tizza, yelka va yuguriş jarohatlari." },
+  { email: "g.rahimova@mednova.demo", name: "Dr. Gulnora Rahimova", spec: "pediatrics", title: "Oliy toifali şifokor", years: 12, fee: 150000, clinic: "Kiçkintoy Bolalar Klinikasi", city: "Samarqand", languages: "Özbek, Rus", rating: 4.9, reviews: 402, verified: true,
+    bio: "Çaqaloqlik davridan ösmirlikkaça bolalarni kuzatuvçi pediatr." },
+  { email: "sh.nazarov@mednova.demo", name: "Dr. Şerzod Nazarov", spec: "endocrinology", title: "t.f.n.", years: 11, fee: 220000, clinic: "Muvozanat Endokrinologiya Markazi", city: "Buxoro", languages: "Özbek, Rus, Ingliz", rating: 4.6, reviews: 133, verified: true,
+    bio: "Diabet böyiça ta’lim, qalqonsimon bez salomatligi va metabolik farovonlik bilan işlaydi." },
+  { email: "k.tursunova@mednova.demo", name: "Dr. Kamola Tursunova", spec: "ophthalmology", title: "Oliy toifali şifokor", years: 16, fee: 200000, clinic: "Tiniq Nigoh Köz Markazi", city: "Toşkent", languages: "Özbek, Rus, Ingliz", rating: 4.7, reviews: 159, verified: true,
+    bio: "Glaukoma skriningi va kompyuterdan közning çarçaşi böyiça oftalmolog." },
+  { email: "j.ismoilov@mednova.demo", name: "Dr. Jasur Ismoilov", spec: "general-practice", title: "Oilaviy şifokor", years: 8, fee: 120000, clinic: "Oilaviy Salomatlik Nuqtasi", city: "Namangan", languages: "Özbek, Rus", rating: 4.8, reviews: 365, verified: true,
+    bio: "Yaxşi davolaş tinglaşdan boşlanadi, deb hisoblaydigan oilaviy şifokor: profilaktik körik, kundalik kasalliklar va yönaltirişlar." },
+  { email: "o.saidov@mednova.demo", name: "Dr. Otabek Saidov", spec: "cardiology", title: "Şifokor", years: 6, fee: 200000, clinic: "Şahar Kardiologiya Markazi", city: "Toşkent", languages: "Özbek, Rus", rating: 0, reviews: 0, verified: false,
+    bio: "Sport kardiologiyasiga qiziqadigan kardiolog. (Tasdiqlaş kutilmoqda — demo.)" },
+  { email: "n.qodirova@mednova.demo", name: "Dr. Nilufar Qodirova", spec: "psychiatry", title: "Şifokor", years: 7, fee: 260000, clinic: "Ruhiy Muvozanat Klinikasi", city: "Toşkent", languages: "Özbek, Rus, Ingliz", rating: 0, reviews: 0, verified: false,
+    bio: "Xavotir, uyqu va yoşlar ruhiy salomatligiga ixtisoslaşgan psixiatr. (Tasdiqlaş kutilmoqda — demo.)" },
 ];
 
 const PATIENTS = [
-  { email: "patient@mednova.demo", name: "Jordan Ellis", dob: "1998-04-12", gender: "male", phone: "+998 90 000 0001", blood: "A+", h: 178, w: 79.5, allergies: "Penicillin (rash) — fictional", chronic: "Mild hypertension — fictional", ec: "Taylor Ellis (sibling) +998 90 000 0002" },
-  { email: "n.saidova@mednova.demo", name: "Nodira Saidova", dob: "1990-09-03", gender: "female", phone: "+998 90 000 0003", blood: "O+", h: 165, w: 61, allergies: "None", chronic: "", ec: "" },
-  { email: "l.carter@mednova.demo", name: "Liam Carter", dob: "1985-01-22", gender: "male", phone: "+39 300 000 0004", blood: "B+", h: 183, w: 88, allergies: "Pollen", chronic: "", ec: "" },
-  { email: "a.tursunov@mednova.demo", name: "Aziz Tursunov", dob: "2001-06-30", gender: "male", phone: "+998 90 000 0005", blood: "AB+", h: 175, w: 70, allergies: "None", chronic: "", ec: "" },
-  { email: "e.novak@mednova.demo", name: "Emma Novak", dob: "1979-11-15", gender: "female", phone: "+39 300 000 0006", blood: "A-", h: 168, w: 66, allergies: "Latex", chronic: "Type 2 diabetes — fictional", ec: "" },
-  { email: "t.aliev@mednova.demo", name: "Timur Aliev", dob: "1994-02-08", gender: "male", phone: "+998 90 000 0007", blood: "O-", h: 180, w: 82, allergies: "None", chronic: "", ec: "" },
+  { email: "patient@mednova.demo", name: "Sardor Aminov", dob: "1998-04-12", gender: "male", phone: "+998 90 000 00 01", blood: "A+", h: 178, w: 79.5, allergies: "Penitsillin (toşma) — xayoliy", chronic: "Yengil gipertoniya — xayoliy", ec: "Aziza Aminova (singlisi) +998 90 000 00 02" },
+  { email: "n.saidova@mednova.demo", name: "Nodira Saidova", dob: "1990-09-03", gender: "female", phone: "+998 90 000 00 03", blood: "O+", h: 165, w: 61, allergies: "Yöq", chronic: "", ec: "" },
+  { email: "l.karimova@mednova.demo", name: "Laylo Karimova", dob: "1985-01-22", gender: "female", phone: "+998 90 000 00 04", blood: "B+", h: 170, w: 68, allergies: "Gul çangi", chronic: "", ec: "" },
+  { email: "a.tursunov@mednova.demo", name: "Aziz Tursunov", dob: "2001-06-30", gender: "male", phone: "+998 90 000 00 05", blood: "AB+", h: 175, w: 70, allergies: "Yöq", chronic: "", ec: "" },
+  { email: "z.ahmedova@mednova.demo", name: "Zarina Ahmedova", dob: "1979-11-15", gender: "female", phone: "+998 90 000 00 06", blood: "A-", h: 168, w: 66, allergies: "Lateks", chronic: "2-tur diabet — xayoliy", ec: "" },
+  { email: "t.aliyev@mednova.demo", name: "Timur Aliyev", dob: "1994-02-08", gender: "male", phone: "+998 90 000 00 07", blood: "O-", h: 180, w: 82, allergies: "Yöq", chronic: "", ec: "" },
 ];
 
 /** Local date at hh:mm, `dayOffset` days from today. */
@@ -144,38 +144,39 @@ async function seed(tx: Queryable) {
 
   const [hart, karimov, okafor, weiss, yusupova, marino, tanaka, petrova] = doctorIds;
   const [jordan, nodira, liam, aziz, emma, timur] = patientIds;
+  void yusupova;
 
   type Appt = [string, string, string, string, string, string | null];
   const appts: Appt[] = [
-    // Demo patient — Jordan Ellis
-    [jordan, hart, weekday(2, 10, 0), "confirmed", "Follow-up on blood pressure readings", null],
-    [jordan, okafor, weekday(6, 14, 30), "pending", "Check a new mole on the shoulder", null],
-    [jordan, petrova, weekday(-12, 11, 0), "completed", "Annual check-up", "Routine check-up. Advised 30 min of daily activity and reduced salt intake. (Fictional note)"],
-    [jordan, hart, weekday(-40, 9, 30), "completed", "Elevated blood pressure at pharmacy screening", "Home BP monitoring plan discussed; lifestyle measures first. Review in 6 weeks. (Fictional note)"],
-    [jordan, weiss, weekday(-75, 15, 0), "completed", "Knee pain after running", "Likely overuse; physiotherapy exercises recommended. (Fictional note)"],
-    [jordan, tanaka, weekday(-20, 13, 0), "cancelled", "Eye strain from screen work", null],
-    // Demo doctor — Dr. Amelia Hart: today's agenda + history
-    [nodira, hart, at(0, 9, 0), "completed", "Palpitations during exercise", "ECG normal. Hydration and caffeine guidance given. (Fictional note)"],
-    [liam, hart, at(0, 10, 30), "confirmed", "Cholesterol results review", null],
-    [aziz, hart, at(0, 13, 0), "confirmed", "Sports clearance consultation", null],
-    [emma, hart, at(0, 15, 30), "pending", "Shortness of breath on stairs", null],
-    [timur, hart, weekday(1, 11, 0), "pending", "Family history of heart disease — screening", null],
-    [emma, hart, weekday(3, 9, 0), "confirmed", "Blood pressure follow-up", null],
-    [nodira, hart, weekday(-7, 14, 0), "completed", "Chest tightness evaluation", "Musculoskeletal cause most likely; return if symptoms change. (Fictional note)"],
-    [liam, hart, weekday(-30, 10, 0), "completed", "Initial cardiology consultation", "Lipid panel ordered. (Fictional note)"],
-    [timur, hart, weekday(-15, 16, 0), "cancelled", "Routine heart check", null],
-    // Other doctors (platform-wide analytics)
-    [nodira, karimov, weekday(4, 12, 0), "confirmed", "Recurring migraines", null],
-    [liam, weiss, weekday(-5, 9, 0), "completed", "Shoulder pain", "Rotator cuff strain. (Fictional note)"],
-    [aziz, yusupova, weekday(-3, 10, 0), "completed", "Vaccination question for younger sibling", "Information provided. (Fictional note)"],
-    [emma, marino, weekday(-10, 11, 30), "completed", "Diabetes education session", "HbA1c reviewed. (Fictional note)"],
-    [emma, marino, weekday(8, 11, 30), "pending", "Quarterly diabetes review", null],
-    [timur, tanaka, weekday(5, 15, 0), "confirmed", "Vision check", null],
-    [aziz, petrova, weekday(-50, 9, 0), "completed", "Seasonal flu symptoms", "Rest and fluids. (Fictional note)"],
-    [nodira, okafor, weekday(-60, 12, 30), "completed", "Skin rash", "Contact dermatitis. (Fictional note)"],
-    [liam, petrova, weekday(-90, 10, 30), "completed", "General check-up", null],
-    [timur, weiss, weekday(-100, 14, 0), "completed", "Ankle sprain", null],
-    [emma, karimov, weekday(-120, 9, 30), "completed", "Dizziness", null],
+    // Demo bemor — Sardor Aminov
+    [jordan, hart, weekday(2, 10, 0), "confirmed", "Qon bosimi körsatkiçlari böyiça takroriy körik", null],
+    [jordan, okafor, weekday(6, 14, 30), "pending", "Yelkadagi yangi xolni tekşiriş", null],
+    [jordan, petrova, weekday(-12, 11, 0), "completed", "Yillik profilaktik körik", "Profilaktik körik. Har kuni 30 daqiqa jismoniy faollik va tuzni kamaytiriş tavsiya qilindi. (Xayoliy yozuv)"],
+    [jordan, hart, weekday(-40, 9, 30), "completed", "Dorixonadagi ölçovda qon bosimi yuqori çiqdi", "Uyda qon bosimini nazorat qiliş rejasi muhokama qilindi; avval turmuş tarzi özgarişlari. 6 haftadan keyin qayta körik. (Xayoliy yozuv)"],
+    [jordan, weiss, weekday(-75, 15, 0), "completed", "Yugurişdan keyin tizza oğriği", "Ortiqça yuklama ehtimoli; fizioterapiya maşqlari tavsiya qilindi. (Xayoliy yozuv)"],
+    [jordan, tanaka, weekday(-20, 13, 0), "cancelled", "Kompyuterdan közning çarçaşi", null],
+    // Demo şifokor — Dr. Malika Hasanova: bugungi jadval + tarix
+    [nodira, hart, at(0, 9, 0), "completed", "Jismoniy maşq paytida yurak tez urişi", "EKG me’yorda. Suyuqlik va kofein böyiça tavsiyalar berildi. (Xayoliy yozuv)"],
+    [liam, hart, at(0, 10, 30), "confirmed", "Xolesterin natijalarini körib çiqiş", null],
+    [aziz, hart, at(0, 13, 0), "confirmed", "Sport bilan şuğullaniş uçun ruxsatnoma", null],
+    [emma, hart, at(0, 15, 30), "pending", "Zinadan çiqqanda nafas qisilişi", null],
+    [timur, hart, weekday(1, 11, 0), "pending", "Oilada yurak kasalligi — skrining", null],
+    [emma, hart, weekday(3, 9, 0), "confirmed", "Qon bosimi böyiça takroriy körik", null],
+    [nodira, hart, weekday(-7, 14, 0), "completed", "Kökrakdagi siqiliş hissini baholaş", "Ehtimol muşak-skelet sababli; belgilar özgarsa qayta murojaat qiliş. (Xayoliy yozuv)"],
+    [liam, hart, weekday(-30, 10, 0), "completed", "Birlamçi kardiolog konsultatsiyasi", "Lipid profili tahlili buyurildi. (Xayoliy yozuv)"],
+    [timur, hart, weekday(-15, 16, 0), "cancelled", "Muntazam yurak tekşiruvi", null],
+    // Boşqa şifokorlar (platforma statistikasi uçun)
+    [nodira, karimov, weekday(4, 12, 0), "confirmed", "Takrorlanuvçi migren", null],
+    [liam, weiss, weekday(-5, 9, 0), "completed", "Yelka oğriği", "Rotator manjet zöriqişi. (Xayoliy yozuv)"],
+    [aziz, okafor, weekday(-3, 10, 0), "completed", "Yuzdagi husnbuzar", "Teri parvarişi böyiça tavsiyalar berildi. (Xayoliy yozuv)"],
+    [emma, marino, weekday(-10, 11, 30), "completed", "Diabet böyiça ta’lim maşğuloti", "HbA1c körib çiqildi. (Xayoliy yozuv)"],
+    [emma, marino, weekday(8, 11, 30), "pending", "Diabet böyiça çoraklik körik", null],
+    [timur, tanaka, weekday(5, 15, 0), "confirmed", "Közni tekşiriş", null],
+    [aziz, petrova, weekday(-50, 9, 0), "completed", "Mavsumiy gripp belgilari", "Dam oliş va köp suyuqlik. (Xayoliy yozuv)"],
+    [nodira, okafor, weekday(-60, 12, 30), "completed", "Teridagi toşma", "Kontakt dermatit. (Xayoliy yozuv)"],
+    [liam, petrova, weekday(-90, 10, 30), "completed", "Umumiy körik", null],
+    [timur, weiss, weekday(-100, 14, 0), "completed", "Topiq lat yeyişi", null],
+    [emma, karimov, weekday(-120, 9, 30), "completed", "Boş aylaniş", null],
   ];
   const apptIds: string[] = [];
   for (const [p, d, when, status, reason, notes] of appts) {
@@ -196,23 +197,23 @@ async function seed(tx: Queryable) {
   for (const [off, weight, sys, dia, hr, glucose] of vitals) {
     await tx.query(
       `INSERT INTO medical_records (patient_id, record_type, title, summary, data, recorded_at)
-       VALUES ($1,'vitals','Home vitals log','Self-recorded measurements (fictional)', $2, $3)`,
+       VALUES ($1,'vitals','Uyda ölçangan körsatkiçlar','Mustaqil ölçovlar (xayoliy)', $2, $3)`,
       [jordan, JSON.stringify({ weight_kg: weight, systolic: sys, diastolic: dia, heart_rate: hr, glucose_mmol: glucose }), at(off, 8)],
     );
   }
   const records: [string, string | null, number | null, string, string, string, object, string][] = [
-    [jordan, petrova, 2, "visit_note", "Annual check-up", "Routine check-up. Advised 30 min of daily activity and reduced salt intake.", {}, weekday(-12, 11, 30)],
-    [jordan, hart, 3, "visit_note", "Cardiology consultation", "Home BP monitoring plan discussed; lifestyle measures first.", {}, weekday(-40, 10, 0)],
-    [jordan, weiss, 4, "visit_note", "Orthopaedic consultation — knee", "Likely overuse; physiotherapy exercises recommended.", {}, weekday(-75, 15, 30)],
-    [jordan, petrova, null, "lab_result", "Lipid panel", "Values within reference range (fictional).",
-      { items: [{ name: "Total cholesterol", value: 4.9, unit: "mmol/L", range: "< 5.2" }, { name: "LDL", value: 2.8, unit: "mmol/L", range: "< 3.0" }, { name: "HDL", value: 1.3, unit: "mmol/L", range: "> 1.0" }, { name: "Triglycerides", value: 1.4, unit: "mmol/L", range: "< 1.7" }] }, weekday(-12, 12, 0)],
-    [jordan, petrova, null, "lab_result", "Complete blood count", "No abnormalities flagged (fictional).",
-      { items: [{ name: "Haemoglobin", value: 148, unit: "g/L", range: "130–170" }, { name: "WBC", value: 6.1, unit: "×10⁹/L", range: "4.0–11.0" }, { name: "Platelets", value: 245, unit: "×10⁹/L", range: "150–400" }] }, weekday(-12, 12, 0)],
-    [jordan, null, null, "vaccination", "Seasonal influenza vaccine", "Administered at community pharmacy (fictional).", { dose: "Annual" }, at(-55, 17)],
-    [nodira, hart, 6, "visit_note", "Cardiology — palpitations", "ECG normal. Hydration and caffeine guidance given.", {}, at(0, 9, 30)],
-    [nodira, hart, 12, "visit_note", "Cardiology — chest tightness", "Musculoskeletal cause most likely.", {}, weekday(-7, 14, 30)],
-    [liam, hart, 13, "visit_note", "Initial cardiology consultation", "Lipid panel ordered.", {}, weekday(-30, 10, 30)],
-    [emma, marino, 18, "lab_result", "HbA1c", "Reviewed during education session (fictional).", { items: [{ name: "HbA1c", value: 7.1, unit: "%", range: "< 7.0" }] }, weekday(-10, 12, 0)],
+    [jordan, petrova, 2, "visit_note", "Yillik profilaktik körik", "Profilaktik körik. Har kuni 30 daqiqa jismoniy faollik va tuzni kamaytiriş tavsiya qilindi.", {}, weekday(-12, 11, 30)],
+    [jordan, hart, 3, "visit_note", "Kardiolog konsultatsiyasi", "Uyda qon bosimini nazorat qiliş rejasi muhokama qilindi; avval turmuş tarzi özgarişlari.", {}, weekday(-40, 10, 0)],
+    [jordan, weiss, 4, "visit_note", "Ortoped konsultatsiyasi — tizza", "Ortiqça yuklama ehtimoli; fizioterapiya maşqlari tavsiya qilindi.", {}, weekday(-75, 15, 30)],
+    [jordan, petrova, null, "lab_result", "Lipid profili", "Qiymatlar me’yoriy oraliqda (xayoliy).",
+      { items: [{ name: "Umumiy xolesterin", value: 4.9, unit: "mmol/L", range: "< 5,2" }, { name: "LDL", value: 2.8, unit: "mmol/L", range: "< 3,0" }, { name: "HDL", value: 1.3, unit: "mmol/L", range: "> 1,0" }, { name: "Triglitseridlar", value: 1.4, unit: "mmol/L", range: "< 1,7" }] }, weekday(-12, 12, 0)],
+    [jordan, petrova, null, "lab_result", "Umumiy qon tahlili", "Çetlaşişlar aniqlanmadi (xayoliy).",
+      { items: [{ name: "Gemoglobin", value: 148, unit: "g/L", range: "130–170" }, { name: "Leykotsitlar", value: 6.1, unit: "×10⁹/L", range: "4,0–11,0" }, { name: "Trombotsitlar", value: 245, unit: "×10⁹/L", range: "150–400" }] }, weekday(-12, 12, 0)],
+    [jordan, null, null, "vaccination", "Mavsumiy grippga qarşi emlaş", "Dorixonada emlandi (xayoliy).", { dose: "Har yili" }, at(-55, 17)],
+    [nodira, hart, 6, "visit_note", "Kardiolog — yurak tez urişi", "EKG me’yorda. Suyuqlik va kofein böyiça tavsiyalar berildi.", {}, at(0, 9, 30)],
+    [nodira, hart, 12, "visit_note", "Kardiolog — kökrakdagi siqiliş", "Ehtimol muşak-skelet sababli.", {}, weekday(-7, 14, 30)],
+    [liam, hart, 13, "visit_note", "Birlamçi kardiolog konsultatsiyasi", "Lipid profili tahlili buyurildi.", {}, weekday(-30, 10, 30)],
+    [emma, marino, 18, "lab_result", "HbA1c", "Ta’lim maşğulotida körib çiqildi (xayoliy).", { items: [{ name: "HbA1c", value: 7.1, unit: "%", range: "< 7,0" }] }, weekday(-10, 12, 0)],
   ];
   for (const [p, d, apptIdx, type, title, summary, data, when] of records) {
     await tx.query(
@@ -223,33 +224,40 @@ async function seed(tx: Queryable) {
   }
 
   const jordanUser = patientUserIds[0];
-  const notes: [string, string, string, string, string][] = [
-    [jordanUser, "appointment", "Appointment confirmed", "Dr. Amelia Hart confirmed your follow-up visit.", "/dashboard/patient/appointments"],
-    [jordanUser, "record", "New lab results available", "Your lipid panel and blood count were added to your records.", "/dashboard/patient/records"],
-    [jordanUser, "system", "Welcome to MEDNOVA AI", "This is a demonstration account with fictional data.", "/dashboard"],
+  const n = (u: string, type: string, key: string, params: object, link: string) =>
+    tx.query("INSERT INTO notifications (user_id, type, title, body, params, link) VALUES ($1,$2,$3,$4,$5,$6)", [u, type, `n.${key}.t`, `n.${key}.b`, JSON.stringify(params), link]);
+  await n(jordanUser, "appointment", "apptConfirmed", { doctor: "Dr. Malika Hasanova", when: weekday(2, 10, 0) }, "/dashboard/patient/appointments");
+  await n(jordanUser, "record", "newRecord", { doctor: "Dr. Jasur Ismoilov", title: "Lipid profili" }, "/dashboard/patient/records");
+  await n(jordanUser, "system", "welcomeDemo", {}, "/dashboard");
+  const hartUser = (await tx.query<{ id: string }>("SELECT id FROM users WHERE email='doctor@mednova.demo'"))[0].id;
+  await n(hartUser, "appointment", "bookingRequest", { patient: "Zarina Ahmedova", when: at(0, 15, 30) }, "/dashboard/doctor/appointments");
+  await n(hartUser, "review", "newReview", { patient: "Nodira Saidova", rating: 5 }, "/dashboard/doctor");
+  const adminUser = (await tx.query<{ id: string }>("SELECT id FROM users WHERE email='admin@mednova.demo'"))[0].id;
+  await n(adminUser, "verification", "pendingDoctors", { count: 2 }, "/dashboard/admin/doctors");
+
+  // Sharhlar (reviews) — completed demo appointments
+  const reviews: [number, number, string][] = [
+    [2, 5, "Juda e’tiborli şifokor, hamma narsani sodda tuşuntirdi."],
+    [3, 5, "Qon bosimi böyiça aniq reja berdi. Raxmat!"],
+    [6, 5, "Tez va professional körik."],
+    [12, 4, "Yaxşi maslahat, faqat biroz kutişga töğri keldi."],
+    [16, 5, "Yelka oğriği böyiça foydali maşqlar körsatdi."],
+    [18, 5, "Diabet haqida köp narsani tuşundim."],
   ];
-  for (const [u, type, title, body, link] of notes) {
-    await tx.query("INSERT INTO notifications (user_id, type, title, body, link) VALUES ($1,$2,$3,$4,$5)", [u, type, title, body, link]);
+  for (const [idx, rating, comment] of reviews) {
+    const [a] = await tx.query<{ patient_id: string; doctor_id: string }>("SELECT patient_id, doctor_id FROM appointments WHERE id=$1", [apptIds[idx]]);
+    await tx.query("INSERT INTO reviews (appointment_id, patient_id, doctor_id, rating, comment, created_at) VALUES ($1,$2,$3,$4,$5, now() - ($6 || ' days')::interval)",
+      [apptIds[idx], a.patient_id, a.doctor_id, rating, comment, String(idx + 1)]);
   }
-  const hartUser = await tx.query<{ id: string }>("SELECT id FROM users WHERE email='doctor@mednova.demo'");
-  await tx.query(
-    "INSERT INTO notifications (user_id, type, title, body, link) VALUES ($1,'appointment','New booking request','Emma Novak requested an appointment today at 15:30.','/dashboard/doctor/appointments')",
-    [hartUser[0].id],
-  );
-  const adminUser = await tx.query<{ id: string }>("SELECT id FROM users WHERE email='admin@mednova.demo'");
-  await tx.query(
-    "INSERT INTO notifications (user_id, type, title, body, link) VALUES ($1,'verification','2 doctors awaiting verification','Review credentials for Dr. Omar Haddad and Dr. Grace Liu.','/dashboard/admin/doctors')",
-    [adminUser[0].id],
-  );
 
   // Sample AI conversation for the demo patient
   const conv = await tx.query<{ id: string }>(
-    "INSERT INTO conversations (user_id, title) VALUES ($1,'What does a cardiologist do?') RETURNING id",
+    "INSERT INTO conversations (user_id, title) VALUES ($1,'Kardiolog nima bilan şuğullanadi?') RETURNING id",
     [jordanUser],
   );
-  await tx.query("INSERT INTO messages (conversation_id, role, content, source) VALUES ($1,'user','What does a cardiologist do?','user')", [conv[0].id]);
+  await tx.query("INSERT INTO messages (conversation_id, role, content, source) VALUES ($1,'user','Kardiolog nima bilan şuğullanadi?','user')", [conv[0].id]);
   await tx.query(
     "INSERT INTO messages (conversation_id, role, content, source) VALUES ($1,'assistant',$2,'demo')",
-    [conv[0].id, "A **cardiologist** is a doctor who specialises in the heart and blood vessels. They evaluate symptoms such as chest discomfort, palpitations or breathlessness, manage conditions like high blood pressure, and order tests such as an ECG or echocardiogram.\n\n_This is general educational information, not a diagnosis._"],
+    [conv[0].id, "**Kardiolog** — yurak va qon tomirlari böyiça mutaxassis. U kökrakdagi noqulaylik, yurak urişining buzilişi yoki zöriqişda nafas qisilişi kabi belgilarni tekşiradi, yuqori qon bosimini nazorat qiladi hamda **EKG** yoki **exokardiografiya** kabi tekşiruvlarni buyuradi.\n\n_Bu umumiy ta’limiy ma’lumot, taşxis emas._"],
   );
 }
