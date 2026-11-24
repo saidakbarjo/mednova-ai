@@ -90,7 +90,7 @@ async function seed(tx: Queryable) {
   const hash = bcrypt.hashSync(DEMO_PASSWORD, 10);
   const insertUser = async (email: string, name: string, role: string) =>
     (await tx.query<{ id: string }>(
-      "INSERT INTO users (email, password_hash, full_name, role, is_demo) VALUES ($1,$2,$3,$4,TRUE) RETURNING id",
+      "INSERT INTO users (id, email, password_hash, full_name, role, is_demo) VALUES (md5($1)::uuid,$1,$2,$3,$4,TRUE) RETURNING id",
       [email, hash, name, role],
     ))[0].id;
 
@@ -109,9 +109,9 @@ async function seed(tx: Queryable) {
   for (const d of DOCTORS) {
     const uid = await insertUser(d.email, d.name, "doctor");
     const r = await tx.query<{ id: string }>(
-      `INSERT INTO doctors (user_id, specialization_id, title, bio, years_experience, consultation_fee, clinic_name, city,
+      `INSERT INTO doctors (id, user_id, specialization_id, title, bio, years_experience, consultation_fee, clinic_name, city,
          languages, rating, review_count, is_verified, verified_at)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12, CASE WHEN $12 THEN now() ELSE NULL END) RETURNING id`,
+       VALUES (md5('doctor:' || $1::text)::uuid, $1::uuid,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12, CASE WHEN $12 THEN now() ELSE NULL END) RETURNING id`,
       [uid, specIds[d.spec], d.title, d.bio, d.years, d.fee, d.clinic, d.city, d.languages, d.rating, d.reviews, d.verified],
     );
     doctorIds.push(r[0].id);
@@ -135,8 +135,8 @@ async function seed(tx: Queryable) {
     const uid = await insertUser(p.email, p.name, "patient");
     patientUserIds.push(uid);
     const r = await tx.query<{ id: string }>(
-      `INSERT INTO patients (user_id, date_of_birth, gender, phone, blood_type, height_cm, weight_kg, allergies, chronic_conditions, emergency_contact)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) RETURNING id`,
+      `INSERT INTO patients (id, user_id, date_of_birth, gender, phone, blood_type, height_cm, weight_kg, allergies, chronic_conditions, emergency_contact)
+       VALUES (md5('patient:' || $1::text)::uuid, $1::uuid,$2,$3,$4,$5,$6,$7,$8,$9,$10) RETURNING id`,
       [uid, p.dob, p.gender, p.phone, p.blood, p.h, p.w, p.allergies, p.chronic, p.ec],
     );
     patientIds.push(r[0].id);

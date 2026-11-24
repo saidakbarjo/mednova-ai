@@ -60,7 +60,8 @@ async function createEngine(): Promise<Engine> {
   }
 
   const { PGlite } = await import("@electric-sql/pglite");
-  const dir = path.join(process.cwd(), ".data", "pglite");
+  // Serverless hosts (Vercel) only allow writes to /tmp — demo data is re-seeded on each cold start there.
+  const dir = process.env.VERCEL ? "/tmp/mednova-pglite" : path.join(process.cwd(), ".data", "pglite");
   fs.mkdirSync(dir, { recursive: true });
   const db = new PGlite(dir);
   await db.waitReady;

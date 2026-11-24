@@ -8,7 +8,11 @@ const securityHeaders = [
 const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
-  experimental: { serverComponentsExternalPackages: ["@electric-sql/pglite", "pg", "bcryptjs"] },
+  experimental: {
+    serverComponentsExternalPackages: ["@electric-sql/pglite", "pg", "bcryptjs"],
+    // ship the SQL migrations with every serverless function (Vercel)
+    outputFileTracingIncludes: { "/**": ["./supabase/migrations/**"] },
+  },
   async headers() {
     return [{ source: "/(.*)", headers: securityHeaders }];
   },
