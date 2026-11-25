@@ -1,7 +1,7 @@
 {
   "name": "MEDNOVA AI",
   "short_name": "MEDNOVA",
-  "description": "Aqlli tibbiyot platformasi — Saidakbar & Zukhra",
+  "description": "Aqlli tibbiyot platformasi — CYB 4 students project",
   "start_url": "/dashboard",
   "display": "standalone",
   "background_color": "#050A18",

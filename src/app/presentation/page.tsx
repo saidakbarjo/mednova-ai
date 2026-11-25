@@ -67,7 +67,7 @@ export default async function Presentation() {
           <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-semibold text-brand-200"><Sparkles className="h-3.5 w-3.5" /> {t("pres.eyebrow")}</span>
           <h1 className="mt-5 text-5xl font-extrabold sm:text-7xl">MEDNOVA <span className="text-gradient">AI</span></h1>
           <p className="mt-4 max-w-2xl text-lg text-white/70">{t("pres.subtitle")}</p>
-          <p className="mt-6 font-display text-xl font-semibold">Saidakbar &amp; Zukhra</p>
+          <p className="mt-6 font-display text-xl font-semibold">CYB 4 students project</p>
           <div className="mt-10 grid max-w-4xl grid-cols-2 gap-3 sm:grid-cols-6">
             {([[endpoints, t("pres.k.endpoints")], [11, t("pres.k.tables")], [3, t("pres.k.roles")], [4, t("pres.k.languages")], [c.appointments, t("pres.k.appointments")], [74, t("pres.k.tests")]] as const).map(([v, l]) => (
               <div key={l} className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 backdrop-blur"><p className="font-display text-2xl font-bold"><CountUp value={v} /></p><p className="text-xs text-white/55">{l}</p></div>
@@ -197,7 +197,7 @@ export default async function Presentation() {
             <div className="absolute left-1/2 top-0 h-64 w-[600px] -translate-x-1/2 animate-aurora rounded-full bg-brand-500/25 blur-[100px]" />
             <div className="relative">
               <p className="text-sm uppercase tracking-[0.3em] text-brand-300">{t("pres.credits.by")}</p>
-              <p className="mt-4 font-display text-4xl font-extrabold sm:text-6xl">Saidakbar <span className="text-gradient">&amp;</span> Zukhra</p>
+              <p className="mt-4 font-display text-4xl font-extrabold sm:text-6xl">CYB 4 <span className="text-gradient">students</span> project</p>
               <p className="mt-4 text-white/65">{t("pres.credits.project")}: <strong className="text-white">MEDNOVA AI</strong></p>
               <p className="mx-auto mt-6 max-w-xl text-xs text-white/45">{t("pres.credits.note")}</p>
             </div>

@@ -1,7 +1,7 @@
 /* Özbekça — yangi lotin alifbosi (ö, ğ, ş, ç). "uz-old" locale bu matndan avtomatik yasaladi. */
 export const uz: Record<string, string> = {
   "meta.title": "MEDNOVA AI — Aqlli tibbiyot platformasi",
-  "meta.description": "Tasdiqlangan şifokorlarni toping, qabulga yoziling, tibbiy yozuvlaringizni saqlang va xavfsiz ta’limiy AI yordamçi bilan örganing. Saidakbar va Zukhraning universitet loyihasi.",
+  "meta.description": "Tasdiqlangan şifokorlarni toping, qabulga yoziling, tibbiy yozuvlaringizni saqlang va xavfsiz ta’limiy AI yordamçi bilan örganing. Universitet loyihasi — CYB 4 students project.",
 
   "nav.features": "Imkoniyatlar", "nav.how": "Qanday işlaydi", "nav.doctors": "Şifokor topiş", "nav.assistant": "AI yordamçi", "nav.project": "Loyiha",
   "nav.signIn": "Kiriş", "nav.getStarted": "Boşlaş", "nav.openDashboard": "Kabinetga ötiş",
@@ -54,14 +54,14 @@ export const uz: Record<string, string> = {
   "faq.q2": "Tibbiy yozuvlarimni kim köra oladi?", "faq.a2": "Faqat siz va siz yozilgan şifokorlar. Administratorlar hisoblarni boşqaradi va şifokorlarni tasdiqlaydi, lekin klinik yozuvlarni oça olmaydi — bu API darajasida ta’minlangan.",
   "faq.q3": "Şifokorlar qanday tasdiqlanadi?", "faq.a3": "Yangi şifokor hisobi administrator uning malakasini tekşirib, tasdiqlamaguniça yaşirin turadi. Qidiruvda faqat tasdiqlangan şifokorlar körinadi.",
   "faq.q4": "Özbek yoki rus tilida foydalansa böladimi?", "faq.a4": "Ha. Butun interfeys — AI yordamçi ham — özbek (yangi va amaldagi lotin alifbosi), rus va ingliz tillarida işlaydi. Tilni globus belgisi orqali almaştiring.",
-  "faq.q5": "Bu haqiqiy tibbiy xizmatmi?", "faq.a5": "MEDNOVA AI — Saidakbar va Zukhraning universitet loyihasi. Barça odamlar va tibbiy ma’lumotlar xayoliy. Şoşilinç holatda doim 103 ga qönğiroq qiling.",
+  "faq.q5": "Bu haqiqiy tibbiy xizmatmi?", "faq.a5": "MEDNOVA AI — universitet loyihasi (CYB 4 students project). Barça odamlar va tibbiy ma’lumotlar xayoliy. Şoşilinç holatda doim 103 ga qönğiroq qiling.",
   "cta.title": "Butun platformani demo rejimda sinab köring", "cta.text": "Bir bosişda bemor, şifokor yoki administrator sifatida kiring — barça ma’lumotlar xayoliy.", "cta.demo": "Demo kiriş", "cta.project": "Loyiha haqida",
   "footer.tagline": "Bemorlar, şifokorlar va administratorlarni birlaştiruvçi aqlli tibbiyot platformasi — xavfsizlik uçun yaratilgan ta’limiy AI yordamçi bilan.",
   "footer.disclaimer": "MEDNOVA AI — universitet loyihasi. U taşxis qöymaydi va şoşilinç yordam körsatmaydi. Favqulodda holatda 103 (Özbekiston) yoki 112 (Yevropa) raqamiga qönğiroq qiling.",
   "footer.platform": "Platforma", "footer.project": "Loyiha", "footer.demo": "Demo", "footer.patientDash": "Bemor kabineti", "footer.createAccount": "Röyxatdan ötiş", "footer.demoAccounts": "Demo hisoblar",
   "footer.madeBy": "mehr bilan yaratdi", "footer.fictional": "Körsatilgan barça odamlar va tibbiy ma’lumotlar xayoliy.",
 
-  "auth.backHome": "Boş sahifaga", "auth.project": "Saidakbar va Zukhraning universitet loyihasi",
+  "auth.backHome": "Boş sahifaga", "auth.project": "Universitet loyihasi — CYB 4 students project",
   "auth.sideTitle": "Salomatligingiz yöli — bitta xavfsiz joyda.", "auth.side1": "Tasdiqlangan mutaxassislarga real vaqtda yoziling", "auth.side2": "Qabul yozuvlari, tahlillar va körsatkiçlar bir joyda", "auth.side3": "MEDNOVA AI yordamçisi bilan xavfsiz örganing",
   "auth.welcome": "Xuş kelibsiz", "auth.welcomeSub": "MEDNOVA AI hisobingizga kiring.", "auth.email": "Elektron poçta", "auth.password": "Parol", "auth.showPassword": "Parolni körsatiş",
   "auth.signIn": "Kiriş", "auth.demoMode": "Namoyiş rejimi", "auth.demoHint": "Xayoliy hisoblar · parol", "auth.platformAdmin": "Platforma administratori",

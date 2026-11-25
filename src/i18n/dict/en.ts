@@ -1,7 +1,7 @@
 /* English — the base dictionary (every key must exist here). */
 export const en: Record<string, string> = {
   "meta.title": "MEDNOVA AI — Intelligent Healthcare Platform",
-  "meta.description": "Find verified doctors, book appointments, keep your health records and learn with a safe educational AI assistant. A university project by Saidakbar & Zukhra.",
+  "meta.description": "Find verified doctors, book appointments, keep your health records and learn with a safe educational AI assistant. A university project — CYB 4 students project.",
 
   "nav.features": "Features", "nav.how": "How it works", "nav.doctors": "Find a doctor", "nav.assistant": "AI Assistant", "nav.project": "Project",
   "nav.signIn": "Sign in", "nav.getStarted": "Get started", "nav.openDashboard": "Open dashboard",
@@ -54,14 +54,14 @@ export const en: Record<string, string> = {
   "faq.q2": "Who can see my medical records?", "faq.a2": "Only you and the doctors you have booked with. Administrators manage accounts and verify doctors but cannot open clinical records — this is enforced by the API.",
   "faq.q3": "How are doctors verified?", "faq.a3": "New doctor accounts stay hidden until an administrator reviews their credentials and approves them. Only verified doctors appear in search and can be booked.",
   "faq.q4": "Can I use it in Uzbek or Russian?", "faq.a4": "Yes. The whole interface — including the AI assistant — works in Uzbek (new and current Latin alphabet), Russian and English. Switch language with the globe icon.",
-  "faq.q5": "Is this a real medical service?", "faq.a5": "MEDNOVA AI is a university project by Saidakbar & Zukhra. All people and medical data are fictional. In an emergency always call 103.",
+  "faq.q5": "Is this a real medical service?", "faq.a5": "MEDNOVA AI is a university project (CYB 4 students project). All people and medical data are fictional. In an emergency always call 103.",
   "cta.title": "Explore the full platform in demo mode", "cta.text": "Sign in as a patient, doctor or administrator with one click — all data is fictional.", "cta.demo": "Demo sign-in", "cta.project": "Project overview",
   "footer.tagline": "An intelligent healthcare platform connecting patients, doctors and administrators — with an educational AI assistant built for safety.",
   "footer.disclaimer": "MEDNOVA AI is a university project. It does not provide diagnosis or emergency care. In an emergency call 103 (Uzbekistan) or 112 (EU).",
   "footer.platform": "Platform", "footer.project": "Project", "footer.demo": "Demo", "footer.patientDash": "Patient dashboard", "footer.createAccount": "Create account", "footer.demoAccounts": "Demo accounts",
   "footer.madeBy": "made with", "footer.fictional": "All people and medical data shown are fictional.",
 
-  "auth.backHome": "Back to home", "auth.project": "University project by Saidakbar & Zukhra",
+  "auth.backHome": "Back to home", "auth.project": "University project — CYB 4 students project",
   "auth.sideTitle": "Your health journey, organised in one secure place.", "auth.side1": "Book verified specialists in real time", "auth.side2": "Keep visit notes, lab results and vitals together", "auth.side3": "Learn safely with the MEDNOVA AI assistant",
   "auth.welcome": "Welcome back", "auth.welcomeSub": "Sign in to your MEDNOVA AI account.", "auth.email": "Email", "auth.password": "Password", "auth.showPassword": "Show password",
   "auth.signIn": "Sign in", "auth.demoMode": "Demonstration mode", "auth.demoHint": "Fictional accounts · password", "auth.platformAdmin": "Platform admin",
