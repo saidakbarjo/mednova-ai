@@ -30,7 +30,7 @@ export function SiteFooter() {
       </div>
       <div className="relative border-t border-white/10">
         <div className="container-x flex flex-col items-center justify-between gap-2 py-5 text-xs text-white/45 sm:flex-row">
-          <p className="flex items-center gap-1.5">© {new Date().getFullYear()} MEDNOVA AI · {t("footer.madeBy")} <Heart className="h-3 w-3 fill-rose-500 text-rose-500" /> <span className="font-semibold text-white/80">Saidakbar & Zukhra</span></p>
+          <p className="flex items-center gap-1.5">© {new Date().getFullYear()} MEDNOVA AI · {t("footer.madeBy")} <Heart className="h-3 w-3 fill-rose-500 text-rose-500" /> <span className="font-semibold text-white/80">CYB 4 students project</span></p>
           <p>{t("footer.fictional")}</p>
         </div>
       </div>
